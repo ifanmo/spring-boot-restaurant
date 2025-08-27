@@ -9,7 +9,7 @@ create table users
 
 create table customers
 (
-    id         BIGINT auto_increment primary key ,
+    id         BIGINT primary key ,
     first_name VARCHAR(255) not null,
     last_name  VARCHAR(255) not null,
     address    VARCHAR(255) not null,
@@ -18,7 +18,7 @@ create table customers
 
 create table staff
 (
-    id         BIGINT auto_increment primary key,
+    id         BIGINT primary key,
     first_name VARCHAR(255) not null,
     last_name  VARCHAR(255) not null,
     address    VARCHAR(255) null,
@@ -29,12 +29,13 @@ create table bookings
 (
     id               BIGINT auto_increment primary key ,
     number_of_guests INT                           not null,
-    startTime        DATETIME                      not null,
-    endTime          DATETIME                      not null,
-    status           VARCHAR(20) default 'PENDING' not null
+    start_time        DATETIME                      not null,
+    end_time          DATETIME                      not null,
+    status           VARCHAR(20) default 'PENDING' not null,
+    seating_id BIGINT not null
 );
 
-create table tables
+create table seating
 (
     id              BIGINT auto_increment primary key,
     number_of_seats int                             not null,
@@ -45,17 +46,46 @@ create table shifts
 (
     id         BIGINT auto_increment
         primary key,
-    start_time datetime not null,
+    start_time DATETIME not null,
     end_time   DATETIME not null
 );
 
+alter table customers
+    add constraint customers_users_id_fk
+        foreign key (id) references users (id);
+
+alter table staff
+    add constraint staff_users_id_fk
+        foreign key (id) references users (id);
+
+alter table bookings
+    add customer_id BIGINT not null;
+
+alter table bookings
+    add constraint bookings_customers_id_fk
+        foreign key (customer_id) references customers (id)
+            on delete cascade;
+
+alter table bookings
+    add constraint bookings_seating_id_fk
+        foreign key (seating_id) references seating (id)
+            on delete cascade;
+
 create table staff_shifts
 (
-    id       BIGINT auto_increment
-        primary key,
     staff_id BIGINT not null,
-    shift_id BIGINT not null
+    shift_id BIGINT not null,
+    constraint staff_shifts_pk
+        primary key (staff_id, shift_id),
+    constraint staff_shifts_shifts_id_fk
+        foreign key (shift_id) references shifts (id),
+    constraint staff_shifts_staff_id_fk
+        foreign key (staff_id) references staff (id)
 );
+
+
+
+
 
 
 
