@@ -83,7 +83,35 @@ create table staff_shifts
         foreign key (staff_id) references staff (id)
 );
 
+rename table seating to restaurant_tables;
 
+alter table bookings
+    modify start_time TIME not null;
+
+alter table bookings
+    modify end_time TIME not null;
+
+alter table bookings
+    add date DATE not null;
+
+alter table shifts
+    modify start_time TIME not null;
+
+alter table shifts
+    modify end_time Time null;
+
+alter table shifts
+    add date DATE not null;
+
+alter table restaurant_tables
+    add constraint restaurant_tables_bookings_id_fk
+        foreign key (id) references bookings (id);
+
+alter table bookings
+    drop foreign key bookings_seating_id_fk;
+
+alter table bookings
+    drop column seating_id;
 
 
 

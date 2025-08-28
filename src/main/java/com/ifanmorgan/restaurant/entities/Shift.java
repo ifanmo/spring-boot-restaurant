@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -20,12 +20,17 @@ public class Shift {
     private Long id;
 
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
-    @ManyToMany(mappedBy = "shifts")
+    @Column(name = "date")
+    private LocalDate date;
+
+    @ManyToMany
+    @JoinTable(name = "staff_shifts",
+            joinColumns = @JoinColumn(name = "shift_id"))
     private Set<Staff> staff = new LinkedHashSet<>();
 
 }

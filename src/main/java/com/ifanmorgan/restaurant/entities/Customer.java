@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -16,7 +19,7 @@ public class Customer {
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")
-    private User users;
+    private User user;
 
     @Column(name = "first_name")
     private String firstName;
@@ -29,5 +32,8 @@ public class Customer {
 
     @Column(name = "postcode")
     private String postcode;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Booking> bookings = new LinkedHashSet<>();
 
 }
