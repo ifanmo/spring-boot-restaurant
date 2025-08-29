@@ -1,16 +1,16 @@
 package com.ifanmorgan.restaurant.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "customers")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
     @Id
     @Column(name = "id")
@@ -33,7 +33,13 @@ public class Customer {
     @Column(name = "postcode")
     private String postcode;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Booking> bookings = new LinkedHashSet<>();
+    @ToString.Exclude
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private Set<Booking> bookings = new HashSet<>();
+
+    public void addBooking(Booking booking) {
+        bookings.add(booking);
+        booking.setCustomer(this);
+    }
 
 }

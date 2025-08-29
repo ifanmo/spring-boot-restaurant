@@ -3,11 +3,13 @@ package com.ifanmorgan.restaurant.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "users")
 public class User {
     @Id
@@ -24,11 +26,5 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToOne(mappedBy = "user")
-    private Customer customer;
-
-    @OneToOne(mappedBy = "user")
-    private Staff staff;
 
 }

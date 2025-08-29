@@ -1,12 +1,14 @@
 package com.ifanmorgan.restaurant.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "restaurant_tables")
 public class RestaurantTable {
@@ -14,11 +16,6 @@ public class RestaurantTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @MapsId
-    @OneToOne
-    @JoinColumn(name = "id")
-    private Booking booking;
 
     @Column(name = "number_of_seats")
     private Integer numberOfSeats;

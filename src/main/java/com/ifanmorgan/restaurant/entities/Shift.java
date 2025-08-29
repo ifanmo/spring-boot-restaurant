@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -28,9 +28,7 @@ public class Shift {
     @Column(name = "date")
     private LocalDate date;
 
-    @ManyToMany
-    @JoinTable(name = "staff_shifts",
-            joinColumns = @JoinColumn(name = "shift_id"))
-    private Set<Staff> staff = new LinkedHashSet<>();
+    @ManyToMany(mappedBy = "shifts")
+    private Set<Staff> staff = new HashSet<>();
 
 }

@@ -9,7 +9,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAmount;
 
 @Getter
 @Setter
@@ -27,27 +26,30 @@ public class Booking {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "end_time")
-    private LocalTime endTime;
+    @Column(name = "duration")
+    private Integer duration;
+
+    @Column(name = "status")
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @Column(name = "date")
     private LocalDate date;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-
-    @OneToOne(mappedBy = "booking")
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private RestaurantTable restaurantTable;
 
-    public void setBookingEndTime(Integer duration) {
-        setEndTime(this.startTime.plusHours(duration));
+    public void extendDuration(Integer duration) {
+        this.duration += duration;
     }
 
+    public void addTable(RestaurantTable table) {
+        this.restaurantTable = table;
+    }
 
 }

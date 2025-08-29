@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "staff")
 public class Staff {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @MapsId
@@ -21,10 +21,10 @@ public class Staff {
     @JoinColumn(name = "id")
     private User user;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "address")
@@ -33,7 +33,20 @@ public class Staff {
     @Column(name = "postcode")
     private String postcode;
 
-    @ManyToMany(mappedBy = "staff")
+    @ManyToMany
+    @JoinTable(name = "staff_shifts",
+            joinColumns = @JoinColumn(name = "staff_id"),
+            inverseJoinColumns = @JoinColumn(name = "shift_id")
+    )
     private Set<Shift> shifts = new LinkedHashSet<>();
 
+    public void addShift(Shift shift) {
+        shifts.add(shift);
+        shift.getStaff().add(this);
+    }
+
+    public void removeShift(Shift shift) {
+        shifts.remove(shift);
+        shift.getStaff().remove(this);
+    }
 }
