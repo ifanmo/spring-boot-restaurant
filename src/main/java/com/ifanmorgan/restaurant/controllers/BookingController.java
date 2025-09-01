@@ -11,10 +11,7 @@ import com.ifanmorgan.restaurant.services.BookingService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @AllArgsConstructor
@@ -26,7 +23,6 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    @Transactional
     public ResponseEntity<BookingDto> createBooking(
             @RequestBody CreateBookingRequest requestDto,
             UriComponentsBuilder uriBuilder
@@ -37,6 +33,13 @@ public class BookingController {
         var bookingDto = bookingMapper.toDto(booking);
         var uri = uriBuilder.path("/bookings/{id}").buildAndExpand(booking.getId()).toUri();
         return ResponseEntity.created(uri).body(bookingDto);
+    }
+
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<BookingDto> updateBooking(
+            @PathVariable(name = "id") Long id
+    ) {
+       return bookingService.updateBooking(id);
     }
 
 }
