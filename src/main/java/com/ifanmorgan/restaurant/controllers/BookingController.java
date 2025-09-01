@@ -42,4 +42,11 @@ public class BookingController {
        return bookingService.updateBooking(id);
     }
 
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<BookingDto> cancelBooking(
+            @PathVariable(name = "id") Long id
+    ) {
+       return bookingService.cancelBooking(id);
+    }
+
 }

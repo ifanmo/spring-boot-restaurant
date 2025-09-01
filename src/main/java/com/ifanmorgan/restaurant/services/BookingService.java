@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class BookingService {
     BookingRepository bookingRepository;
     BookingMapper bookingMapper;
+    NotificationHandler notificationHandler;
     RestaurantTableRepository restaurantTableRepository;
 
     @Transactional
@@ -44,6 +45,28 @@ public class BookingService {
 
         booking.setStatus(BookingStatus.APPROVED);
         bookingRepository.save(booking);
+
+        notificationHandler.handle("Your booking at " +  booking.getStartTime() + " has been approved.");
+
+
+        return ResponseEntity.ok(bookingMapper.toDto(booking));
+    }
+
+    public ResponseEntity<BookingDto> cancelBooking(Long id) {
+        var booking = bookingRepository.findById(id).orElse(null);
+        if (booking == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (booking.getStatus().equals(BookingStatus.CANCELLED)) {
+            return ResponseEntity.badRequest().body(bookingMapper.toDto(booking));
+        }
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+
+        notificationHandler.handle("Your booking at " +  booking.getStartTime() + " has been cancelled.");
+
 
         return ResponseEntity.ok(bookingMapper.toDto(booking));
     }
