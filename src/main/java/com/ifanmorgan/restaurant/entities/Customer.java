@@ -34,7 +34,7 @@ public class Customer {
     private String postcode;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Set<Booking> bookings = new HashSet<>();
 
     public void addBooking(Booking booking) {

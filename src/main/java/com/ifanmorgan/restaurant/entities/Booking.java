@@ -3,9 +3,6 @@ package com.ifanmorgan.restaurant.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,29 +24,26 @@ public class Booking {
     private LocalTime startTime;
 
     @Column(name = "duration")
-    private Integer duration;
+    private Integer duration = 1;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status = BookingStatus.PENDING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @Column(name = "date")
-    private LocalDate date;
-
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id")
     private RestaurantTable restaurantTable;
 
     public void extendDuration(Integer duration) {
         this.duration += duration;
-    }
-
-    public void addTable(RestaurantTable table) {
-        this.restaurantTable = table;
     }
 
 }
