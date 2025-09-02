@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -22,13 +22,10 @@ public class Shift {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "end_time")
-    private LocalTime endTime;
-
     @Column(name = "date")
     private LocalDate date;
 
     @ManyToMany(mappedBy = "shifts")
-    private Set<Staff> staff = new HashSet<>();
+    private Set<Staff> staff = new LinkedHashSet<>();
 
 }

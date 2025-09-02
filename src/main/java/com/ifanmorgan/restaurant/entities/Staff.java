@@ -13,40 +13,25 @@ import java.util.Set;
 @Table(name = "staff")
 public class Staff {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
     @MapsId
-    @OneToOne
-    @JoinColumn(name = "id")
-    private User user;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id", nullable = false)
+    private User users;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 55)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 55)
     private String lastName;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "postcode")
-    private String postcode;
 
     @ManyToMany
     @JoinTable(name = "staff_shifts",
             joinColumns = @JoinColumn(name = "staff_id"),
-            inverseJoinColumns = @JoinColumn(name = "shift_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "shift_id"))
     private Set<Shift> shifts = new LinkedHashSet<>();
 
-    public void addShift(Shift shift) {
-        shifts.add(shift);
-        shift.getStaff().add(this);
-    }
-
-    public void removeShift(Shift shift) {
-        shifts.remove(shift);
-        shift.getStaff().remove(this);
-    }
 }

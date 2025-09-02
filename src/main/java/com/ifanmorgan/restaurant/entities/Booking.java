@@ -3,9 +3,13 @@ package com.ifanmorgan.restaurant.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,33 +21,30 @@ public class Booking {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "number_of_guests")
-    private Integer numberOfGuests;
-
-    @Column(name = "start_time")
-    private LocalTime startTime;
-
-    @Column(name = "duration")
-    private Integer duration = 1;
-
-    @Column(name = "date")
-    private LocalDate date;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status = BookingStatus.PENDING;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @MapsId
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "id")
-    private RestaurantTable restaurantTable;
+    @ManyToOne
+    @JoinColumn(name = "seating_id")
+    private Seating table;
 
-    public void extendDuration(Integer duration) {
-        this.duration += duration;
-    }
+    @ManyToOne
+    @JoinColumn(name = "booking_time_slot")
+    private TimeSlot bookingTimeSlot;
+
+    @Column(name = "booking_date")
+    private LocalDate bookingDate;
+
+    @Column(name = "guests")
+    private Integer guests;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
+
 
 }
