@@ -1,6 +1,7 @@
 package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
+import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
 import com.ifanmorgan.restaurant.entities.Booking;
 import com.ifanmorgan.restaurant.entities.BookingStatus;
 import com.ifanmorgan.restaurant.entities.Seating;
@@ -74,5 +75,15 @@ public class BookingService {
 
         bookingRepository.delete(booking);
         return ResponseEntity.noContent().build();
+    }
+
+    public StaffCoverDto getStaffCover() {
+
+        // 2 Chefs Required Per 10 Customers
+        var numberOfChefs = bookingRepository.getNumberOfGuests() / 10 * 2;
+        // 1 Waiter Required Per 2 Tables
+        var numberOfWaiters = bookingRepository.getNumberOfTables() / 2;
+
+        return new StaffCoverDto(numberOfWaiters, numberOfChefs);
     }
 }
