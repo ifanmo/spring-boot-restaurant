@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -41,6 +42,6 @@ public class Booking {
     private BookingStatus status = BookingStatus.PENDING;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
 }
