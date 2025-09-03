@@ -8,10 +8,9 @@ import java.time.LocalTime;
 
 @Data
 public class BookingDto {
-    Integer numberOfGuests;
+    Integer guests;
     LocalTime startTime;
-    Integer duration;
-    LocalDate date;
+    LocalDate bookingDate;
     String status;
     Long customerId;
     Long tableId;

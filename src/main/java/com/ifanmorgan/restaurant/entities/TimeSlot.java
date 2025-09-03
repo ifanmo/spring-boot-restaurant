@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalTime;
+
 @Getter
 @Setter
 @Entity
@@ -16,5 +18,6 @@ public class TimeSlot {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    //TODO [Reverse Engineering] generate columns from DB
+    @Column(name = "start_time")
+    private LocalTime startTime;
 }

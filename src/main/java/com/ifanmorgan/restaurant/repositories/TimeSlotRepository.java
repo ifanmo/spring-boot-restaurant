@@ -1,0 +1,12 @@
+package com.ifanmorgan.restaurant.repositories;
+
+import com.ifanmorgan.restaurant.entities.TimeSlot;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Optional;
+
+public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
+    Optional<TimeSlot> findByStartTime(LocalTime startTime);
+}
