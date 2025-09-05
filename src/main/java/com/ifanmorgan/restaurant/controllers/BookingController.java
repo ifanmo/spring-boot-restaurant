@@ -7,13 +7,18 @@ import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
 import com.ifanmorgan.restaurant.entities.Seating;
 import com.ifanmorgan.restaurant.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.services.BookingService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -26,8 +31,7 @@ class BookingController {
     public ResponseEntity<List<Seating>> getAvailableTables(
             @RequestBody GetAvailableTablesRequest request
     ) {
-        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime());
-        return new ResponseEntity<>(tables, HttpStatus.OK);
+        return bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime());
     }
 
     @GetMapping("staff-cover")
@@ -37,15 +41,10 @@ class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(
-            @RequestBody CreateBookingRequest request) {
+    public ResponseEntity<?> createBooking(
+            @Valid @RequestBody CreateBookingRequest request) {
 
-        var booking = bookingService.createBooking(request);
-
-        var bookingDto = bookingMapper.toDto(booking);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookingDto);
-
+        return bookingService.createBooking(request);
     }
 
     @PostMapping("/{id}/approve-booking")
@@ -57,7 +56,5 @@ class BookingController {
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
         return bookingService.deleteBooking(id);
     }
-
-
 
 }

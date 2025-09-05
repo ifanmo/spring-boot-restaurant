@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.services;
 
+import com.ifanmorgan.restaurant.dtos.BookingDto;
 import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
 import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
 import com.ifanmorgan.restaurant.entities.Booking;
@@ -9,8 +10,8 @@ import com.ifanmorgan.restaurant.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.repositories.BookingRepository;
 import com.ifanmorgan.restaurant.repositories.SeatingRepository;
 import com.ifanmorgan.restaurant.repositories.TimeSlotRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -26,32 +27,34 @@ public class BookingService {
     private final SeatingRepository seatingRepository;
     private final BookingRepository bookingRepository;
 
-    public Booking createBooking(CreateBookingRequest request) {
-        var timeSlot = timeSlotRepository.findByStartTime(request.getStartTime()).orElseThrow();
-        var table = getAvailableTableForBooking(request.getBookingDate(), request.getStartTime(), request.getGuests());
+    public ResponseEntity<BookingDto> createBooking(CreateBookingRequest request) {
+        var timeSlot = timeSlotRepository.findByStartTime(request.getStartTime()).orElse(null);
+        if (timeSlot == null) {
+            return ResponseEntity.notFound().build();
+        }
+        var table = seatingRepository.findAvailableTableForBooking(
+                request.getBookingDate(),
+                request.getStartTime(),
+                request.getGuests())
+                .orElse(null);
+
+        if (table == null) {
+            return ResponseEntity.badRequest().build();
+        }
         var booking = bookingMapper.toEntity(request);
         booking.setBookingTimeSlot(timeSlot);
         booking.setTable(table);
 
-        return bookingRepository.save(booking);
+        bookingRepository.save(booking);
+        var bookingDto = bookingMapper.toDto(booking);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingDto);
 
     }
 
-    public List<Seating> getAvailableTables(LocalDate bookingDate, LocalTime startTime) {
+    public ResponseEntity<List<Seating>> getAvailableTables(LocalDate bookingDate, LocalTime startTime) {
         var tables = seatingRepository.findAvailableTables(bookingDate, startTime).orElse(null);
-        if(tables == null) {
-            throw new EntityNotFoundException("No available tables found for booking date: " + bookingDate);
-        }
-        return tables;
-    }
-
-    public Seating getAvailableTableForBooking(LocalDate bookingDate, LocalTime startTime, Integer guests) {
-        var table = seatingRepository.findAvailableTableForBooking(bookingDate, startTime, guests).orElse(null);
-        if(table == null) {
-            throw new EntityNotFoundException("No available table found for booking date: " + bookingDate);
-        }
-
-        return table;
+        return ResponseEntity.ok(tables);
     }
 
     public ResponseEntity<Void> approveBooking(Long id) {
