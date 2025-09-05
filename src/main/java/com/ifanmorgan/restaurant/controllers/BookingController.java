@@ -27,7 +27,8 @@ class BookingController {
     public ResponseEntity<List<RestaurantTable>> getAvailableTables(
             @Valid @RequestBody GetAvailableTablesRequest request
     ) {
-        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime(), request.getEndTime());
+        var endTime = request.getStartTime().plusHours(1);
+        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime(), endTime);
         return ResponseEntity.ok(tables);
     }
 
