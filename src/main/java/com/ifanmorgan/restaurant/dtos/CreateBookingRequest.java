@@ -13,7 +13,7 @@ public class CreateBookingRequest {
     @NotNull(message = "Number of guests is required")
     private Integer guests;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    @FutureOrPresent(message = "Date must be in the future")
+    @FutureOrPresent(message = "Date cannot be in the past")
     @NotNull(message = "Booking date is required")
     private LocalDate bookingDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

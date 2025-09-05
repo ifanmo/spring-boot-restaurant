@@ -1,18 +1,17 @@
 package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.BookingDto;
-import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
 import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
 import com.ifanmorgan.restaurant.entities.Booking;
 import com.ifanmorgan.restaurant.entities.BookingStatus;
 import com.ifanmorgan.restaurant.entities.Seating;
+import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.repositories.BookingRepository;
+import com.ifanmorgan.restaurant.repositories.CustomerRepository;
 import com.ifanmorgan.restaurant.repositories.SeatingRepository;
 import com.ifanmorgan.restaurant.repositories.TimeSlotRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,58 +25,64 @@ public class BookingService {
     private final TimeSlotRepository timeSlotRepository;
     private final SeatingRepository seatingRepository;
     private final BookingRepository bookingRepository;
+    private final CustomerRepository customerRepository;
 
-    public ResponseEntity<BookingDto> createBooking(CreateBookingRequest request) {
-        var timeSlot = timeSlotRepository.findByStartTime(request.getStartTime()).orElse(null);
+    public BookingDto createBooking(LocalDate bookingDate, LocalTime startTime, Integer guests, Long customerId) {
+        var timeSlot = timeSlotRepository.findByStartTime(startTime).orElse(null);
         if (timeSlot == null) {
-            return ResponseEntity.notFound().build();
+            throw new TimeSlotNotFoundException();
         }
-        var table = seatingRepository.findAvailableTableForBooking(
-                request.getBookingDate(),
-                request.getStartTime(),
-                request.getGuests())
-                .orElse(null);
+        var table = seatingRepository.findAvailableTableForBooking(bookingDate, startTime, guests).orElse(null);
 
         if (table == null) {
-            return ResponseEntity.badRequest().build();
+            throw new TableNotAvailableException();
         }
-        var booking = bookingMapper.toEntity(request);
+
+        var customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) {
+            throw new CustomerNotFoundException();
+        }
+
+        var booking = new Booking();
         booking.setBookingTimeSlot(timeSlot);
+        booking.setBookingDate(bookingDate);
+        booking.setGuests(guests);
         booking.setTable(table);
+        booking.setCustomer(customer);
 
         bookingRepository.save(booking);
-        var bookingDto = bookingMapper.toDto(booking);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookingDto);
+        return bookingMapper.toDto(booking);
 
     }
 
-    public ResponseEntity<List<Seating>> getAvailableTables(LocalDate bookingDate, LocalTime startTime) {
-        var tables = seatingRepository.findAvailableTables(bookingDate, startTime).orElse(null);
-        return ResponseEntity.ok(tables);
+    public List<Seating> getAvailableTables(LocalDate bookingDate, LocalTime startTime) {
+        var tables =  seatingRepository.findAvailableTables(bookingDate, startTime).orElse(null);
+        if (tables == null) {
+            throw new TablesNotFoundException();
+        }
+        return tables;
     }
 
-    public ResponseEntity<Void> approveBooking(Long id) {
+    public void approveBooking(Long id) {
         var booking = bookingRepository.findById(id).orElse(null);
         if (booking == null) {
-            return ResponseEntity.notFound().build();
+            throw new BookingNotFoundException();
         }
 
         if (booking.getStatus() == BookingStatus.PENDING) {
             booking.setStatus(BookingStatus.APPROVED);
         }
         bookingRepository.save(booking);
-        return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> deleteBooking(Long id) {
+    public void deleteBooking(Long id) {
         var booking = bookingRepository.findById(id).orElse(null);
         if (booking == null) {
-            return ResponseEntity.notFound().build();
+            throw new BookingNotFoundException();
         }
 
         bookingRepository.delete(booking);
-        return ResponseEntity.noContent().build();
+
     }
 
     public StaffCoverDto getStaffCover() {
