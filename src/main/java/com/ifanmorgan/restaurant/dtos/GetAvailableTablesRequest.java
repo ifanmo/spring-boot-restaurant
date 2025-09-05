@@ -17,4 +17,5 @@ public class GetAvailableTablesRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @NotNull(message = "Booking time is required")
     private LocalTime startTime;
+    private LocalTime endTime = startTime.plusHours(1);
 }

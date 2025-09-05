@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
 
 @Getter
 @Setter
@@ -30,14 +29,17 @@ public class Booking {
     @Column(name = "booking_date")
     private LocalDate bookingDate;
 
-    @Column(name = "booking_time")
-    private LocalTime bookingTime;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "endTime")
+    private LocalTime endTime;
 
     @Column(name = "guests")
     private Integer guests;
 
     @Column(name = "duration")
-    private LocalTime duration = LocalTime.of(1, 0);
+    private Integer duration = 1;
 
     @ManyToOne
     @JoinColumn(name = "time_slot_id")
@@ -49,5 +51,12 @@ public class Booking {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @PrePersist
+    public void setDefaultEndTime() {
+        if (endTime == null && startTime != null) {
+            endTime = startTime.plusHours(duration);
+        }
+    }
 
 }

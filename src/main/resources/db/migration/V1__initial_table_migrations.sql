@@ -30,8 +30,9 @@ create table bookings
     customer_id BIGINT not null,
     guests INT not null,
     booking_date DATE not null,
-    booking_time TIME not null,
-    duration TIME default '01:00:00',
+    start_time TIME not null,
+    end_time TIMe not null,
+    duration INTEGER default 1,
     time_slot_id BIGINT not null,
     status VARCHAR(10) default 'PENDING' not null,
     table_id BIGINT not null,
@@ -76,6 +77,10 @@ alter table bookings
 alter table bookings
 add constraint bookings_timeslots_id_fk
         foreign key (time_slot_id) references time_slots(id);
+
+alter table bookings
+    add constraint unique_table_date_time_customer
+        unique (table_id, booking_date, start_time, customer_id);
 
 
 alter table customers

@@ -23,13 +23,13 @@ class BookingController {
     private final BookingMapper bookingMapper;
     private final BookingService bookingService;
 
-//    @GetMapping("/available-tables")
-//    public ResponseEntity<List<RestaurantTable>> getAvailableTables(
-//            @Valid @RequestBody GetAvailableTablesRequest request
-//    ) {
-//        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime());
-//        return ResponseEntity.ok(tables);
-//    }
+    @GetMapping("/available-tables")
+    public ResponseEntity<List<RestaurantTable>> getAvailableTables(
+            @Valid @RequestBody GetAvailableTablesRequest request
+    ) {
+        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime(), request.getEndTime());
+        return ResponseEntity.ok(tables);
+    }
 
     @GetMapping("staff-cover")
     public ResponseEntity<StaffCoverDto> getStaffCover() {
