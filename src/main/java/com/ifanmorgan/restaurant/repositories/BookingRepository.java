@@ -10,4 +10,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT COUNT(*) FROM Booking b WHERE b.bookingDate = CURRENT_DATE()")
     Integer getNumberOfTables();
+
   }

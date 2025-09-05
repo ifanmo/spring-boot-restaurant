@@ -1,23 +1,18 @@
 package com.ifanmorgan.restaurant.controllers;
 
-import com.ifanmorgan.restaurant.dtos.BookingDto;
 import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
 import com.ifanmorgan.restaurant.dtos.GetAvailableTablesRequest;
 import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
-import com.ifanmorgan.restaurant.entities.Seating;
+import com.ifanmorgan.restaurant.entities.RestaurantTable;
 import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.services.BookingService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +23,13 @@ class BookingController {
     private final BookingMapper bookingMapper;
     private final BookingService bookingService;
 
-    @GetMapping("/available-tables")
-    public ResponseEntity<List<Seating>> getAvailableTables(
-            @Valid @RequestBody GetAvailableTablesRequest request
-    ) {
-        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime());
-        return ResponseEntity.ok(tables);
-    }
+//    @GetMapping("/available-tables")
+//    public ResponseEntity<List<RestaurantTable>> getAvailableTables(
+//            @Valid @RequestBody GetAvailableTablesRequest request
+//    ) {
+//        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime());
+//        return ResponseEntity.ok(tables);
+//    }
 
     @GetMapping("staff-cover")
     public ResponseEntity<StaffCoverDto> getStaffCover() {
@@ -47,7 +42,7 @@ class BookingController {
             @Valid @RequestBody CreateBookingRequest request) {
         var bookingDto = bookingService.createBooking(
                 request.getBookingDate(),
-                request.getStartTime(),
+                request.getBookingTime(),
                 request.getGuests(),
                 request.getCustomerId());
 

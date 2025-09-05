@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import java.time.LocalTime;
+import java.util.*;
 
 @Getter
 @Setter
@@ -24,18 +24,24 @@ public class Booking {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "seating_id")
-    private Seating table;
-
-    @ManyToOne
-    @JoinColumn(name = "booking_time_slot")
-    private TimeSlot bookingTimeSlot;
+    @JoinColumn(name = "table_id")
+    private RestaurantTable table;
 
     @Column(name = "booking_date")
     private LocalDate bookingDate;
 
+    @Column(name = "booking_time")
+    private LocalTime bookingTime;
+
     @Column(name = "guests")
     private Integer guests;
+
+    @Column(name = "duration")
+    private LocalTime duration = LocalTime.of(1, 0);
+
+    @ManyToOne
+    @JoinColumn(name = "time_slot_id")
+    private TimeSlot timeSlot;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

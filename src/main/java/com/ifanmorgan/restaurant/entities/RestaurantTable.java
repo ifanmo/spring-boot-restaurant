@@ -9,8 +9,8 @@ import lombok.ToString;
 @Setter
 @Entity
 @ToString
-@Table(name = "seating")
-public class Seating {
+@Table(name = "restaurant_tables")
+public class RestaurantTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

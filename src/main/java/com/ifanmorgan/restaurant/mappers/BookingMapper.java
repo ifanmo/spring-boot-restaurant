@@ -13,6 +13,6 @@ public interface BookingMapper {
 
     @Mapping(target = "customerId", source = "customer.id")
     @Mapping(target = "tableId", source = "table.id")
-    @Mapping(target = "startTime", source = "bookingTimeSlot.startTime")
+    @Mapping(target = "bookingTime", source = "bookingTime")
     BookingDto toDto(Booking booking);
 }

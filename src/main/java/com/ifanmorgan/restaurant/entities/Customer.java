@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "customers")
 public class Customer {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @MapsId

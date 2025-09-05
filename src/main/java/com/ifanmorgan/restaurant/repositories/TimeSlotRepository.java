@@ -3,7 +3,6 @@ package com.ifanmorgan.restaurant.repositories;
 import com.ifanmorgan.restaurant.entities.TimeSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 

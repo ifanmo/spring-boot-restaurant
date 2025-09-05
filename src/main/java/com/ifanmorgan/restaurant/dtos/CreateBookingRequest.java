@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Optional;
 
 @Data
 public class CreateBookingRequest {
@@ -18,7 +19,9 @@ public class CreateBookingRequest {
     private LocalDate bookingDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @NotNull(message = "Booking time is required")
-    private LocalTime startTime;
+    private LocalTime bookingTime;
     @NotNull(message = "Customer Id is required")
     private Long customerId;
+
+    private Boolean extendBooking;
 }

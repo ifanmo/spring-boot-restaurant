@@ -14,18 +14,18 @@ import java.util.Set;
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "id")
     private User users;
 
-    @Column(name = "first_name", nullable = false, length = 55)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 55)
+    @Column(name = "last_name")
     private String lastName;
 
     @ManyToMany

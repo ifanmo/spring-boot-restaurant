@@ -9,7 +9,7 @@ import java.time.LocalTime;
 @Data
 public class BookingDto {
     Integer guests;
-    LocalTime startTime;
+    LocalTime bookingTime;
     LocalDate bookingDate;
     String status;
     Long customerId;

@@ -26,15 +26,25 @@ create table staff
 
 create table bookings
 (
-    id               BIGINT auto_increment primary key ,
+    id BIGINT auto_increment primary key ,
     customer_id BIGINT not null,
-    number_of_guests INT not null,
-    date          DATE                      not null,
+    guests INT not null,
+    booking_date DATE not null,
+    booking_time TIME not null,
+    duration TIME default '01:00:00',
+    time_slot_id BIGINT not null,
     status VARCHAR(10) default 'PENDING' not null,
-    seating_id BIGINT not null
+    table_id BIGINT not null,
+    created_at TIMESTAMP default CURRENT_TIMESTAMP
 );
 
-create table seating
+create table time_slots
+(
+    id  BIGINT auto_increment primary key,
+    start_time  TIME not null
+);
+
+create table restaurant_tables
 (
     id              BIGINT auto_increment primary key,
     capacity int                             not null
@@ -55,25 +65,18 @@ create table staff_shifts
         primary key (staff_id, shift_id)
 );
 
-
-
-create table booking_seating
-(
-    id BIGINT primary key not null,
-    booking_id BIGINT,
-    seating_id BIGINT not null,
-    date DATE not null,
-    start_time TIME not null,
-    status VARCHAR(20) not null
-);
-
 alter table bookings
     add constraint bookings_customers_id_fk
         foreign key (customer_id) references customers (id);
 
 alter table bookings
-    add constraint bookings_timeslots_id_fk
-        foreign key (seating_id) references seating (id);
+    add constraint bookings_restaurant_tables_id_fk
+        foreign key (table_id) references restaurant_tables (id);
+
+alter table bookings
+add constraint bookings_timeslots_id_fk
+        foreign key (time_slot_id) references time_slots(id);
+
 
 alter table customers
     add constraint customers_users_id_fk
@@ -91,13 +94,9 @@ alter table staff_shifts
     add constraint staff_shifts_staff_id_fk
         foreign key (staff_id) references staff (id);
 
-alter table booking_seating
-    add constraint booking_seating_seating_id_fk
-        foreign key (seating_id) references seating (id);
 
-alter table booking_seating
-    add constraint booking_seating_bookings_id_fk
-        foreign key (booking_id) references bookings(id);
+
+
 
 
 
