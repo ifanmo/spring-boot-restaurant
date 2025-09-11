@@ -32,14 +32,11 @@ public class Booking {
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "endTime")
+    @Column(name = "end_time")
     private LocalTime endTime;
 
     @Column(name = "guests")
     private Integer guests;
-
-    @Column(name = "duration")
-    private Integer duration = 1;
 
     @ManyToOne
     @JoinColumn(name = "time_slot_id")
@@ -52,11 +49,5 @@ public class Booking {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @PrePersist
-    public void setDefaultEndTime() {
-        if (endTime == null && startTime != null) {
-            endTime = startTime.plusHours(duration);
-        }
-    }
 
 }

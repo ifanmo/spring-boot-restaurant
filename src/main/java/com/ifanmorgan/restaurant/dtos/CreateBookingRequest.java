@@ -22,6 +22,7 @@ public class CreateBookingRequest {
     private LocalTime bookingTime;
     @NotNull(message = "Customer Id is required")
     private Long customerId;
-
-    private Boolean extendBooking;
+    @Min(value = 15, message = "You can extend your booking from 15 to 60 minutes")
+    @Max(value = 60, message = "You can extend your booking from 15 to 60 minutes")
+    private Integer bookingExtension;
 }

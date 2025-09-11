@@ -1,6 +1,8 @@
 package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.BookingDto;
+import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
+import com.ifanmorgan.restaurant.dtos.GetAvailableTablesRequest;
 import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
 import com.ifanmorgan.restaurant.entities.Booking;
 import com.ifanmorgan.restaurant.entities.BookingStatus;
@@ -15,8 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -29,18 +29,26 @@ public class BookingService {
     private final CustomerRepository customerRepository;
 
     @Transactional
-    public BookingDto createBooking(LocalDate bookingDate, LocalTime startTime, Integer guests, Long customerId) {
+    public BookingDto createBooking(CreateBookingRequest request) {
+        final long DEFAULT_DURATION_IN_HOURS = 1;
+        var startTime = request.getBookingTime();
+        var customerId = request.getCustomerId();
+        var endTime = startTime.plusHours(DEFAULT_DURATION_IN_HOURS);
+        if (request.getBookingExtension() != null) {
+           endTime = endTime.plusMinutes(request.getBookingExtension());
+        }
+        var bookingDate = request.getBookingDate();
+        var guests = request.getGuests();
+
         var timeSlot = timeSlotRepository.findByStartTime(startTime).orElse(null);
         if (timeSlot == null) {
             throw new TimeSlotNotFoundException();
         }
-
         var customer = customerRepository.findById(customerId).orElse(null);
         if (customer == null) {
             throw new CustomerNotFoundException();
         }
 
-        var endTime = startTime.plusHours(1);
         var table = tableRepository.findTableForBooking(bookingDate, startTime, endTime, guests).orElse(null);
         if (table == null) {
             throw new TableNotAvailableException();
@@ -48,6 +56,7 @@ public class BookingService {
         var booking = new Booking();
         booking.setBookingDate(bookingDate);
         booking.setStartTime(startTime);
+        booking.setEndTime(endTime);
         booking.setGuests(guests);
         booking.setTable(table);
         booking.setCustomer(customer);
@@ -59,8 +68,19 @@ public class BookingService {
     }
 
     @Transactional
-    public List<RestaurantTable> getAvailableTables(LocalDate bookingDate, LocalTime startTime, LocalTime endTime) {
-        var tables =  tableRepository.findAvailableTables(startTime, endTime, bookingDate).orElse(null);
+    public List<RestaurantTable> getAvailableTables(GetAvailableTablesRequest request) {
+        final long DEFAULT_DURATION_IN_HOURS = 1;
+        var bookingDate = request.getBookingDate();
+        var startTime = request.getStartTime();
+        var endTime = startTime.plusHours(DEFAULT_DURATION_IN_HOURS);
+
+        if (request.getBookingExtension() != null) {
+            endTime = endTime.plusMinutes(request.getBookingExtension());
+        }
+
+        System.out.println(endTime);
+
+        var tables = tableRepository.findAvailableTables(startTime ,endTime, bookingDate).orElse(null);
         if (tables == null) {
             throw new TablesNotFoundException();
         }

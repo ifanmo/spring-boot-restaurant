@@ -27,8 +27,8 @@ class BookingController {
     public ResponseEntity<List<RestaurantTable>> getAvailableTables(
             @Valid @RequestBody GetAvailableTablesRequest request
     ) {
-        var endTime = request.getStartTime().plusHours(1);
-        var tables = bookingService.getAvailableTables(request.getBookingDate(), request.getStartTime(), endTime);
+
+        var tables = bookingService.getAvailableTables(request);
         return ResponseEntity.ok(tables);
     }
 
@@ -41,11 +41,7 @@ class BookingController {
     @PostMapping
     public ResponseEntity<?> createBooking(
             @Valid @RequestBody CreateBookingRequest request) {
-        var bookingDto = bookingService.createBooking(
-                request.getBookingDate(),
-                request.getBookingTime(),
-                request.getGuests(),
-                request.getCustomerId());
+        var bookingDto = bookingService.createBooking(request);
 
         return new ResponseEntity<>(bookingDto, HttpStatus.CREATED);
     }
