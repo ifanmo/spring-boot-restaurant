@@ -13,7 +13,7 @@ import java.time.LocalTime;
 public class DeliveryOrder extends Order {
     @Column(name = "delivery_status")
     @Enumerated(EnumType.STRING)
-    private DeliveryStatus status;
+    private DeliveryStatus deliveryStatus;
 
     @Column(name = "delivery_time")
     private LocalTime deliveryTime;
