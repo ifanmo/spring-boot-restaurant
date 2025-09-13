@@ -1,4 +1,4 @@
-package com.ifanmorgan.restaurant.dtos;
+package com.ifanmorgan.restaurant.dtos.bookings;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

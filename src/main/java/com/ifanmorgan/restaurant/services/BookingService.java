@@ -1,12 +1,12 @@
 package com.ifanmorgan.restaurant.services;
 
-import com.ifanmorgan.restaurant.dtos.BookingDto;
-import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
-import com.ifanmorgan.restaurant.dtos.GetAvailableTablesRequest;
-import com.ifanmorgan.restaurant.dtos.StaffCoverDto;
-import com.ifanmorgan.restaurant.entities.Booking;
-import com.ifanmorgan.restaurant.entities.BookingStatus;
-import com.ifanmorgan.restaurant.entities.RestaurantTable;
+import com.ifanmorgan.restaurant.dtos.bookings.BookingDto;
+import com.ifanmorgan.restaurant.dtos.bookings.CreateBookingRequest;
+import com.ifanmorgan.restaurant.dtos.bookings.GetAvailableTablesRequest;
+import com.ifanmorgan.restaurant.dtos.bookings.StaffCoverDto;
+import com.ifanmorgan.restaurant.entities.bookings.Booking;
+import com.ifanmorgan.restaurant.entities.bookings.BookingStatus;
+import com.ifanmorgan.restaurant.entities.bookings.RestaurantTable;
 import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.repositories.BookingRepository;

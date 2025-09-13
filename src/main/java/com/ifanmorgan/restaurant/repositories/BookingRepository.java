@@ -1,6 +1,6 @@
 package com.ifanmorgan.restaurant.repositories;
 
-import com.ifanmorgan.restaurant.entities.Booking;
+import com.ifanmorgan.restaurant.entities.bookings.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

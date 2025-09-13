@@ -1,4 +1,4 @@
-package com.ifanmorgan.restaurant.entities;
+package com.ifanmorgan.restaurant.entities.users;
 
 public enum Role {
     CUSTOMER,

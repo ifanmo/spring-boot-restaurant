@@ -1,21 +1,19 @@
-package com.ifanmorgan.restaurant.entities;
+package com.ifanmorgan.restaurant.entities.users;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "time_slots")
-public class TimeSlot {
+@Table(name = "shifts")
+public class Shift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,5 +21,11 @@ public class TimeSlot {
 
     @Column(name = "start_time")
     private LocalTime startTime;
+
+    @Column(name = "date")
+    private LocalDate date;
+
+    @ManyToMany(mappedBy = "shifts")
+    private Set<Staff> staff = new LinkedHashSet<>();
 
 }

@@ -1,6 +1,6 @@
 package com.ifanmorgan.restaurant.repositories;
 
-import com.ifanmorgan.restaurant.entities.TimeSlot;
+import com.ifanmorgan.restaurant.entities.bookings.TimeSlot;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalTime;

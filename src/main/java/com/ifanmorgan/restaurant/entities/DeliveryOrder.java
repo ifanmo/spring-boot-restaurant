@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.entities;
 
+import com.ifanmorgan.restaurant.entities.users.Staff;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

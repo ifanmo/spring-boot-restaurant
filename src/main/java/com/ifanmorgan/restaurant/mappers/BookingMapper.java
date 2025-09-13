@@ -1,8 +1,8 @@
 package com.ifanmorgan.restaurant.mappers;
 
-import com.ifanmorgan.restaurant.dtos.BookingDto;
-import com.ifanmorgan.restaurant.dtos.CreateBookingRequest;
-import com.ifanmorgan.restaurant.entities.Booking;
+import com.ifanmorgan.restaurant.dtos.bookings.BookingDto;
+import com.ifanmorgan.restaurant.dtos.bookings.CreateBookingRequest;
+import com.ifanmorgan.restaurant.entities.bookings.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -1,6 +1,8 @@
 package com.ifanmorgan.restaurant.controllers;
 
+import com.ifanmorgan.restaurant.dtos.CreateDeliveryOrderRequest;
 import com.ifanmorgan.restaurant.dtos.CreateRestaurantOrderRequest;
+import com.ifanmorgan.restaurant.dtos.CreateTakeoutOrderRequest;
 import com.ifanmorgan.restaurant.dtos.RestaurantOrderDto;
 import com.ifanmorgan.restaurant.exceptions.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.services.OrderService;
@@ -24,6 +26,23 @@ class OrderController {
     public ResponseEntity<?> createRestaurantOrder(
             @Valid @RequestBody CreateRestaurantOrderRequest request) {
         var orderDto = orderService.createRestaurantOrder(request);
+
+        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
+
+    }
+    @PostMapping("/takeout")
+    public ResponseEntity<?> createTakeoutOrder(
+            @Valid @RequestBody CreateTakeoutOrderRequest request) {
+        var orderDto = orderService.createTakeoutOrder(request);
+
+        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
+
+    }
+
+    @PostMapping("/delivery")
+    public ResponseEntity<?> createDeliveryOrder(
+            @Valid @RequestBody CreateDeliveryOrderRequest request) {
+        var orderDto = orderService.createDeliveryOrder(request);
 
         return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
 
