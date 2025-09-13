@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,11 +19,11 @@ import java.util.Set;
 @Table(name = "orders")
 public abstract class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private Long id;
+    private UUID id;
 
-    @Column(name = "status")
+    @Column(name = "status", insertable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
@@ -30,7 +31,7 @@ public abstract class Order {
     @JoinColumn(name = "customer")
     private Customer customer;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order")

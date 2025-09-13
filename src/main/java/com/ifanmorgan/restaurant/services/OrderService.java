@@ -34,8 +34,6 @@ public class OrderService {
 
         var order = new RestaurantOrder();
         order.setCustomer(customer);
-        order.setCreatedAt(LocalDateTime.now());
-        order.setOrderStatus(OrderStatus.PENDING);
 
         restaurantOrderRepository.save(order);
         return restaurantOrderMapper.toDto(order);
