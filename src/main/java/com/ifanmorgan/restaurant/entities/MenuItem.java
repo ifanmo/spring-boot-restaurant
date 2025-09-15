@@ -36,4 +36,12 @@ public class MenuItem {
     @OneToMany(mappedBy = "item")
     private Set<OrderItem> orderItems = new LinkedHashSet<>();
 
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+    }
+
+    public void removeOrderItem(OrderItem orderItem) {
+        orderItems.remove(orderItem);
+    }
+
 }

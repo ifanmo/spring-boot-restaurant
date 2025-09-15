@@ -1,28 +1,31 @@
 package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.*;
-import com.ifanmorgan.restaurant.entities.DeliveryOrder;
-import com.ifanmorgan.restaurant.entities.RestaurantOrder;
-import com.ifanmorgan.restaurant.entities.TakeoutOrder;
+import com.ifanmorgan.restaurant.entities.*;
 import com.ifanmorgan.restaurant.exceptions.CustomerNotFoundException;
+import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
+import com.ifanmorgan.restaurant.exceptions.OrderAlreadyPlacedException;
+import com.ifanmorgan.restaurant.exceptions.OrderNotFoundException;
 import com.ifanmorgan.restaurant.mappers.OrderMapper;
 import com.ifanmorgan.restaurant.repositories.CustomerRepository;
+import com.ifanmorgan.restaurant.repositories.MenuItemRepository;
 import com.ifanmorgan.restaurant.repositories.OrderRepository;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class OrderService {
 
-    private final OrderRepository restaurantOrderRepository;
-    private final OrderRepository takeoutOrderRepository;
-    private final OrderRepository deliveryOrderRepository;
+    private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final CustomerRepository customerRepository;
+    private final MenuItemRepository menuItemRepository;
 
-    public RestaurantOrderDto createRestaurantOrder(CreateRestaurantOrderRequest request) {
+    public OrderDto createRestaurantOrder(CreateRestaurantOrderRequest request) {
         var customerId = request.getCustomerId();
 
 
@@ -34,11 +37,11 @@ public class OrderService {
         var order = new RestaurantOrder();
         order.setCustomer(customer);
 
-        restaurantOrderRepository.save(order);
-        return orderMapper.toRestaurantDto(order);
+        orderRepository.save(order);
+        return orderMapper.toOrderDto(order);
     }
 
-    public TakeoutOrderDto createTakeoutOrder(CreateTakeoutOrderRequest request) {
+    public OrderDto createTakeoutOrder(CreateTakeoutOrderRequest request) {
         var customerId = request.getCustomerId();
         var customer = customerRepository.findById(customerId).orElse(null);
 
@@ -49,11 +52,11 @@ public class OrderService {
         var order = new TakeoutOrder();
         order.setCustomer(customer);
         order.setPickupTime(request.getPickupTime());
-        takeoutOrderRepository.save(order);
-        return orderMapper.toTakeoutDto(order);
+        orderRepository.save(order);
+        return orderMapper.toOrderDto(order);
     }
 
-    public DeliveryOrderDto createDeliveryOrder(CreateDeliveryOrderRequest request) {
+    public OrderDto createDeliveryOrder(CreateDeliveryOrderRequest request) {
         var customerId = request.getCustomerId();
         var customer = customerRepository.findById(customerId).orElse(null);
         if (customer == null) {
@@ -63,8 +66,68 @@ public class OrderService {
         var order = new DeliveryOrder();
         order.setCustomer(customer);
 
-        deliveryOrderRepository.save(order);
-        return orderMapper.toDeliveryOrderDto(order);
+        orderRepository.save(order);
+        return orderMapper.toOrderDto(order);
 
     }
+
+    public OrderItemDto addOrderItem(Long itemId, UUID id) {
+        var order = orderRepository.findById(id).orElse(null);
+
+        if (order == null) {
+            throw new OrderNotFoundException();
+        }
+
+        if (order.getOrderStatus() != OrderStatus.IN_PROGRESS) {
+            throw new OrderAlreadyPlacedException();
+        }
+
+        var menuItem = menuItemRepository.findById(itemId).orElse(null);
+
+        if (menuItem == null) {
+            throw new MenuItemNotFoundException();
+        }
+
+        var orderItem = order.addItem(menuItem);
+
+        orderRepository.save(order);
+
+        return orderMapper.toOrderItemDto(orderItem);
+    }
+
+    public OrderDto getOrderById(UUID id) {
+        var order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            throw new OrderNotFoundException();
+        }
+
+        return orderMapper.toOrderDto(order);
+    }
+
+    public void placeOrder(UUID id) {
+        var order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            throw new OrderNotFoundException();
+        }
+
+        if (order.getOrderStatus() != OrderStatus.IN_PROGRESS) {
+            throw new OrderAlreadyPlacedException();
+        }
+
+        order.setOrderStatus(OrderStatus.PLACED);
+
+        orderRepository.save(order);
+    }
+
+    public void completeOrder(UUID id) {
+        var order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            throw new OrderNotFoundException();
+        }
+
+        order.setOrderStatus(OrderStatus.COMPLETED);
+
+        orderRepository.save(order);
+    }
+
 }

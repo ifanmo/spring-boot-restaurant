@@ -1,8 +1,7 @@
 package com.ifanmorgan.restaurant.entities;
 
 public enum OrderStatus {
-    PENDING,
-    APPROVED,
-    PREPARING,
+    IN_PROGRESS,
+    PLACED,
     COMPLETED
 }

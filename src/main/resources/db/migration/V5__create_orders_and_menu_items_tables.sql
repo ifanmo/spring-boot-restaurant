@@ -2,7 +2,7 @@ create table orders
 (
     id binary(16) default (uuid_to_bin(uuid())) primary key not null,
     order_type    VARCHAR(20) not null,
-    status        VARCHAR(20) default 'PENDING',
+    status        VARCHAR(20) default 'IN_PROGRESS',
     delivery_status VARCHAR(20) null,
     customer      BIGINT      not null,
     delivery_time TIME        null,

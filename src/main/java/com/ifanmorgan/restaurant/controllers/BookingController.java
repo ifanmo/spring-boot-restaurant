@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.controllers;
 
+import com.ifanmorgan.restaurant.dtos.bookings.BookingDto;
 import com.ifanmorgan.restaurant.dtos.bookings.CreateBookingRequest;
 import com.ifanmorgan.restaurant.dtos.bookings.GetAvailableTablesRequest;
 import com.ifanmorgan.restaurant.dtos.bookings.StaffCoverDto;
@@ -20,7 +21,6 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/bookings")
 class BookingController {
-    private final BookingMapper bookingMapper;
     private final BookingService bookingService;
 
     @GetMapping("/available-tables")
@@ -39,7 +39,7 @@ class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createBooking(
+    public ResponseEntity<BookingDto> createBooking(
             @Valid @RequestBody CreateBookingRequest request) {
         var bookingDto = bookingService.createBooking(request);
 
