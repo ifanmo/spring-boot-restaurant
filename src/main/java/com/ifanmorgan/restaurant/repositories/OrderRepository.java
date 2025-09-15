@@ -1,12 +1,14 @@
 package com.ifanmorgan.restaurant.repositories;
 
 import com.ifanmorgan.restaurant.entities.Order;
+import com.ifanmorgan.restaurant.entities.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-
+    List<Order> findByOrderStatus(OrderStatus orderStatus);
 }

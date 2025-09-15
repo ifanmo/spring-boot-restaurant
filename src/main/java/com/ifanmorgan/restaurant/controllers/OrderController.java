@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,10 +48,20 @@ class OrderController {
 
     }
 
+    @GetMapping
+    public ResponseEntity<List<OrderDto>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable UUID id) {
         var orderDto = orderService.getOrderById(id);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/outstanding")
+    public ResponseEntity<List<OrderDto>> getOutstandingOrders() {
+        return ResponseEntity.ok(orderService.getOutstandingOrders());
     }
 
     @PostMapping("/{id}/place-order")

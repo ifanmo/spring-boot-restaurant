@@ -11,10 +11,11 @@ import com.ifanmorgan.restaurant.repositories.CustomerRepository;
 import com.ifanmorgan.restaurant.repositories.MenuItemRepository;
 import com.ifanmorgan.restaurant.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -93,6 +94,22 @@ public class OrderService {
         orderRepository.save(order);
 
         return orderMapper.toOrderItemDto(orderItem);
+    }
+
+    public List<OrderDto> getAllOrders() {
+        var orders = orderRepository.findAll();
+        return orders
+                .stream()
+                .map(orderMapper::toOrderDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<OrderDto> getOutstandingOrders() {
+        var orders = orderRepository.findByOrderStatus(OrderStatus.PLACED);
+        return orders
+                .stream()
+                .map(orderMapper::toOrderDto)
+                .collect(Collectors.toList());
     }
 
     public OrderDto getOrderById(UUID id) {
