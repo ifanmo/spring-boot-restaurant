@@ -1,6 +1,6 @@
 create table orders
 (
-    id binary(16) default (uuid_to_bin(uuid())) primary key not null,
+    id BIGINT primary key auto_increment,
     order_type    VARCHAR(20) not null,
     status        VARCHAR(20) default 'IN_PROGRESS',
     delivery_status VARCHAR(20) null,
@@ -30,7 +30,7 @@ create table order_items
 (
     id       BIGINT auto_increment
         primary key,
-    order_id binary(16)        not null,
+    order_id BIGINT        not null,
     item_id  BIGINT        not null,
     quantity int default 1 not null
 );

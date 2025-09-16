@@ -19,7 +19,7 @@ import java.util.UUID;
 @Table(name = "orders")
 public abstract class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private UUID id;
 
