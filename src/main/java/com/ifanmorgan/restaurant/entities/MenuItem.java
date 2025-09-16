@@ -38,14 +38,7 @@ public class MenuItem {
     private Category category;
 
     @OneToMany(mappedBy = "item")
-    private Set<OrderItem> orderItems = new LinkedHashSet<>();
+    private Set<CartItem> cartItems = new LinkedHashSet<>();
 
-    public void addOrderItem(OrderItem orderItem) {
-        orderItems.add(orderItem);
-    }
-
-    public void removeOrderItem(OrderItem orderItem) {
-        orderItems.remove(orderItem);
-    }
 
 }

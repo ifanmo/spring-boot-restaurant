@@ -8,6 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -28,5 +30,9 @@ public class CartItem {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    public BigDecimal calculateTotalPrice() {
+        return item.getPrice().multiply(BigDecimal.valueOf(quantity));
+    }
 
 }
