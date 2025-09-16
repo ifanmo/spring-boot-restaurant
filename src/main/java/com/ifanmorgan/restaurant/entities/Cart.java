@@ -18,7 +18,6 @@ import java.util.UUID;
 @Table(name = "carts")
 public class Cart {
     @Id
-    @Size(max = 16)
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
