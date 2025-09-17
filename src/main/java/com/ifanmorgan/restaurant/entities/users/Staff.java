@@ -20,7 +20,7 @@ public class Staff {
     @MapsId
     @OneToOne
     @JoinColumn(name = "id")
-    private User users;
+    private User user;
 
     @Column(name = "first_name")
     private String firstName;
