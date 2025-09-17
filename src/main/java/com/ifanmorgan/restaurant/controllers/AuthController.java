@@ -2,7 +2,9 @@ package com.ifanmorgan.restaurant.controllers;
 
 import com.ifanmorgan.restaurant.dtos.JwtResponse;
 import com.ifanmorgan.restaurant.dtos.LoginRequest;
+import com.ifanmorgan.restaurant.dtos.UserDto;
 import com.ifanmorgan.restaurant.entities.users.User;
+import com.ifanmorgan.restaurant.mappers.UserMapper;
 import com.ifanmorgan.restaurant.repositories.UserRepository;
 import com.ifanmorgan.restaurant.services.JwtService;
 import jakarta.validation.Valid;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
@@ -30,15 +35,29 @@ public class AuthController {
                         request.getPassword())
         );
 
-        var token = jwtService.generateToken(request.getEmail());
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        var token = jwtService.generateToken(user);
 
         return ResponseEntity.ok(new JwtResponse(token));
     }
     @PostMapping("/validate")
     public boolean validate(@RequestHeader("Authorization") String authHeader) {
-        System.out.println("Validate called");
         var token = authHeader.replace("Bearer ", "");
         return jwtService.validateToken(token);
+    }
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userId = (Long)authentication.getPrincipal();
+        var user = userRepository.findById(userId).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var userDto = userMapper.toDto(user);
+
+        return ResponseEntity.ok(userDto);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
