@@ -9,7 +9,7 @@ create table users
 
 create table customers
 (
-    id         BIGINT primary key ,
+    id         BIGINT auto_increment primary key ,
     first_name VARCHAR(55) not null,
     last_name  VARCHAR(55) not null,
     street_number VARCHAR(10) not null,
@@ -31,8 +31,7 @@ create table bookings
     guests INT not null,
     booking_date DATE not null,
     start_time TIME not null,
-    end_time TIMe not null,
-    duration INTEGER default 1,
+    end_time TIME not null,
     time_slot_id BIGINT not null,
     status VARCHAR(10) default 'PENDING' not null,
     table_id BIGINT not null,

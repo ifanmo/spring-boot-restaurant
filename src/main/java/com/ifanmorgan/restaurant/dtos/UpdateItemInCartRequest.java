@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class updateItemInCartRequest {
+public class UpdateItemInCartRequest {
     @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity cannot be less than one")
     @Max(value = 10, message = "Quantity cannot be greater than ten")

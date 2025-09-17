@@ -2,7 +2,6 @@ package com.ifanmorgan.restaurant.controllers;
 
 import com.ifanmorgan.restaurant.dtos.*;
 import com.ifanmorgan.restaurant.exceptions.CartNotFoundException;
-import com.ifanmorgan.restaurant.exceptions.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
 import com.ifanmorgan.restaurant.services.CartService;
 import jakarta.validation.Valid;
@@ -45,7 +44,7 @@ public class CartController {
 
     @PutMapping("/{cartId}/items/{itemId}")
     public ResponseEntity<CartItemDto> updateCartItem(
-            @Valid @RequestBody updateItemInCartRequest request,
+            @Valid @RequestBody UpdateItemInCartRequest request,
             @PathVariable UUID cartId,
             @PathVariable Long itemId
     ) {

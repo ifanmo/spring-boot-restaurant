@@ -9,9 +9,6 @@ import com.ifanmorgan.restaurant.exceptions.OrderNotFoundException;
 import com.ifanmorgan.restaurant.mappers.CartMapper;
 import com.ifanmorgan.restaurant.repositories.CartRepository;
 import com.ifanmorgan.restaurant.repositories.MenuItemRepository;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

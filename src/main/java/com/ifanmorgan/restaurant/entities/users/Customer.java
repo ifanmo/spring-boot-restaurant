@@ -15,8 +15,8 @@ public class Customer {
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "id")
-    private User users;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "first_name")
     private String firstName;
