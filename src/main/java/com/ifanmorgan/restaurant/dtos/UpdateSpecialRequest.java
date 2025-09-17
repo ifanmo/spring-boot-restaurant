@@ -8,7 +8,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class updateSpecialRequest {
+public class UpdateSpecialRequest {
     @NotNull(message = "name is required")
     @Size(max = 20, message = "name must be less than 20 characters")
     private String name;

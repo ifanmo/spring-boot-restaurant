@@ -2,7 +2,7 @@ package com.ifanmorgan.restaurant.controllers;
 
 
 import com.ifanmorgan.restaurant.dtos.MenuItemDto;
-import com.ifanmorgan.restaurant.dtos.updateSpecialRequest;
+import com.ifanmorgan.restaurant.dtos.UpdateSpecialRequest;
 import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
 import com.ifanmorgan.restaurant.services.MenuService;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class MenuController {
 
     @PostMapping("/special")
     public ResponseEntity<MenuItemDto> createOrUpdateSpecial(
-            @Valid @RequestBody updateSpecialRequest request
+            @Valid @RequestBody UpdateSpecialRequest request
     ) {
         var dto = menuService.createOrUpdateSpecial(request.getName(), request.getPrice(), request.getDescription());
         return ResponseEntity.ok(dto);
