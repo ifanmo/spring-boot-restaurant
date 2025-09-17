@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.crypto.SecretKey;
 
 @Configuration
-@ConfigurationProperties(prefix = "sping.jwt")
+@ConfigurationProperties(prefix = "spring.jwt")
 @Data
 public class JwtConfig {
     private String secret;
