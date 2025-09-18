@@ -35,4 +35,8 @@ public class Staff {
             inverseJoinColumns = @JoinColumn(name = "shift_id"))
     private Set<Shift> shifts = new HashSet<>();
 
+    public void addShift(Shift shift) {
+        this.shifts.add(shift);
+    }
+
 }
