@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,6 +33,6 @@ public class Staff {
     @JoinTable(name = "staff_shifts",
             joinColumns = @JoinColumn(name = "staff_id"),
             inverseJoinColumns = @JoinColumn(name = "shift_id"))
-    private Set<Shift> shifts = new LinkedHashSet<>();
+    private Set<Shift> shifts = new HashSet<>();
 
 }
