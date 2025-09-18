@@ -38,7 +38,7 @@ public class StaffService {
         return staffMapper.toDto(staff);
     }
 
-    public void addShift(Long shiftId, Long id) {
+    public StaffDto addShift(Long shiftId, Long id) {
         var staff = staffRepository.findById(id).orElse(null);
         if (staff == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found");
@@ -50,6 +50,9 @@ public class StaffService {
         }
 
         staff.addShift(shift);
+
         staffRepository.save(staff);
+
+        return staffMapper.toDto(staff);
     }
 }

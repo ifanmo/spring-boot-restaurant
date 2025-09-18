@@ -30,12 +30,12 @@ public class StaffController {
     }
 
     @PostMapping("{id}/shifts")
-    public ResponseEntity<Void> addShift(
+    public ResponseEntity<StaffDto> addShift(
             @PathVariable Long id,
             @Valid @RequestBody AddShiftToStaffRequest request
     ) {
-         staffService.addShift(request.getShiftId(), id);
-         return ResponseEntity.ok().build();
+         var staffDto = staffService.addShift(request.getShiftId(), id);
+         return ResponseEntity.status(HttpStatus.CREATED).body(staffDto);
     }
 
 }

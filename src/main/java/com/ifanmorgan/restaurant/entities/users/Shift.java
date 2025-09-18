@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.LinkedHashSet;
@@ -22,10 +23,17 @@ public class Shift {
     @Column(name = "start_time")
     private LocalTime startTime;
 
+    @Column(name = "end_time")
+    private LocalTime endTime;
+
     @Column(name = "date")
     private LocalDate date;
 
     @ManyToMany(mappedBy = "shifts")
     private Set<Staff> staff = new LinkedHashSet<>();
+
+    public Integer calculateDuration() {
+        return Math.toIntExact(Duration.between(startTime, endTime).toHours());
+    }
 
 }

@@ -39,4 +39,11 @@ public class Staff {
         this.shifts.add(shift);
     }
 
+    public int calculateHoursWorked() {
+        return shifts.stream()
+                .map(Shift::calculateDuration)
+                .reduce(0, Integer::sum);
+
+    }
+
 }
