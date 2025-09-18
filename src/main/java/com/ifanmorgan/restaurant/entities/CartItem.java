@@ -1,12 +1,8 @@
 package com.ifanmorgan.restaurant.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 
@@ -26,13 +22,13 @@ public class CartItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private MenuItem item;
+    private MenuItem menuItem;
 
     @Column(name = "quantity")
     private Integer quantity;
 
     public BigDecimal calculateTotalPrice() {
-        return item.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return menuItem.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 
 }

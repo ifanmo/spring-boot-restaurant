@@ -28,7 +28,7 @@ public class Cart {
 
     public CartItem getItem(Long itemId) {
         for (var item : items) {
-            if (item.getItem().getId().equals(itemId)) {
+            if (item.getMenuItem().getId().equals(itemId)) {
                 return item;
             }
         }
@@ -41,7 +41,7 @@ public class Cart {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
             cartItem = new CartItem();
-            cartItem.setItem(item);
+            cartItem.setMenuItem(item);
             cartItem.setQuantity(1);
             cartItem.setCart(this);
             this.items.add(cartItem);

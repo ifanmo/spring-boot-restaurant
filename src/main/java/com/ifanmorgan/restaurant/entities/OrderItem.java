@@ -22,7 +22,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private MenuItem item;
+    private MenuItem menuItem;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -33,16 +33,16 @@ public class OrderItem {
     @Column(name = "total_Price")
     private BigDecimal totalPrice;
 
-    public OrderItem(MenuItem item, Integer quantity, BigDecimal price, BigDecimal totalPrice, Order order) {
-        this.item = item;
-        this.quantity = quantity;
-        this.unitPrice = price;
-        this.totalPrice = totalPrice;
+    public OrderItem(Order order, MenuItem menuItem, Integer quantity) {
         this.order = order;
+        this.menuItem = menuItem;
+        this.quantity = quantity;
+        this.unitPrice = menuItem.getPrice();
+        this.totalPrice = menuItem.getPrice().multiply(new BigDecimal(quantity));
     }
 
     public BigDecimal calculateTotalPrice() {
-        return item.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return menuItem.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 
 }

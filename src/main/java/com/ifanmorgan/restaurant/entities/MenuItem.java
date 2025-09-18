@@ -1,8 +1,6 @@
 package com.ifanmorgan.restaurant.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +35,7 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "menuItem")
     private Set<CartItem> cartItems = new LinkedHashSet<>();
 
 

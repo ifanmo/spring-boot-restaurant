@@ -21,7 +21,7 @@ class OrderController {
     @PostMapping("/checkout")
     public ResponseEntity<SimpleOrderDto> checkout(
             @Valid @RequestBody CheckoutRequest request) {
-        var simpleOrderDto = orderService.checkout(request.getOrderType(), request.getCartId());
+        var simpleOrderDto = orderService.checkout(request.getCartId(), request.getOrderType());
         return new ResponseEntity<>(simpleOrderDto, HttpStatus.CREATED);
     }
 

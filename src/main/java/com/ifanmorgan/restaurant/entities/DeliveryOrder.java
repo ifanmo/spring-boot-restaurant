@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.entities;
 
+import com.ifanmorgan.restaurant.entities.users.Customer;
 import com.ifanmorgan.restaurant.entities.users.Staff;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,5 +23,18 @@ public class DeliveryOrder extends Order {
     @ManyToOne
     @JoinColumn(name = "driver")
     private Staff driver;
+
+    public static DeliveryOrder fromCart(Cart cart, Customer customer) {
+        var order = new DeliveryOrder();
+        order.setCustomer(customer);
+        order.setOrderStatus(OrderStatus.PLACED);
+        order.setTotalPrice(cart.calculateTotalPrice());
+
+        cart.getItems().forEach(item -> {
+            var orderItem = new OrderItem(order, item.getMenuItem(), item.getQuantity());
+            order.getOrderItems().add(orderItem);
+        });
+        return order;
+    }
 
 }

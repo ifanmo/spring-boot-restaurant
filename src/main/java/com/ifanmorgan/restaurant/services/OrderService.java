@@ -2,7 +2,6 @@ package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.*;
 import com.ifanmorgan.restaurant.entities.*;
-import com.ifanmorgan.restaurant.entities.users.Customer;
 import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.OrderMapper;
 import com.ifanmorgan.restaurant.repositories.CartRepository;
@@ -24,6 +23,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final OrderFactory orderFactory;
     private final CustomerRepository customerRepository;
     private final CartRepository cartRepository;
     private final AuthService authService;
@@ -68,7 +68,7 @@ public class OrderService {
     }
 
     @Transactional
-    public SimpleOrderDto checkout(OrderType orderType, UUID cartId) {
+    public SimpleOrderDto checkout(UUID cartId, OrderType orderType) {
         var cart = cartRepository.findById(cartId).orElse(null);
         if (cart == null) {
             throw new CartNotFoundException();
@@ -84,20 +84,7 @@ public class OrderService {
             throw new CustomerNotFoundException();
         }
 
-        var order = new RestaurantOrder();
-        order.setCustomer(customer);
-        order.setOrderStatus(OrderStatus.PLACED);
-        order.setTotalPrice(cart.calculateTotalPrice());
-
-        cart.getItems().forEach(item -> {
-            var orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setQuantity(item.getQuantity());
-            orderItem.setItem(item.getItem());
-            orderItem.setUnitPrice(item.getItem().getPrice());
-            orderItem.setTotalPrice(item.calculateTotalPrice());
-            order.getOrderItems().add(orderItem);
-        });
+        var order = orderFactory.create(orderType, cart, customer);
 
         orderRepository.save(order);
 
