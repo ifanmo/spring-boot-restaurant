@@ -17,11 +17,12 @@ public class TakeoutOrder extends Order {
     @Column(name = "pickup_time")
     private LocalTime pickupTime;
 
-    public static TakeoutOrder fromCart(Cart cart, Customer customer) {
+    public static TakeoutOrder fromCart(Cart cart, Customer customer, LocalTime pickupTime) {
         var order = new TakeoutOrder();
         order.setCustomer(customer);
         order.setOrderStatus(OrderStatus.PLACED);
         order.setTotalPrice(cart.calculateTotalPrice());
+        order.setPickupTime(pickupTime);
 
         cart.getItems().forEach(item -> {
             var orderItem = new OrderItem(order, item.getMenuItem(), item.getQuantity());

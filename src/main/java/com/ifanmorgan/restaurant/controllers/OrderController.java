@@ -19,11 +19,13 @@ class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/checkout")
-    public ResponseEntity<SimpleOrderDto> checkout(
+    public ResponseEntity<?> checkout(
             @Valid @RequestBody CheckoutRequest request) {
-        var simpleOrderDto = orderService.checkout(request.getCartId(), request.getOrderType());
-        return new ResponseEntity<>(simpleOrderDto, HttpStatus.CREATED);
-    }
+
+            var orderDto = orderService.checkout(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+        }
+
 
     @GetMapping
     public ResponseEntity<List<OrderDto>> getAllOrders() {

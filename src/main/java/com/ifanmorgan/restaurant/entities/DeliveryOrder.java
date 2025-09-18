@@ -24,10 +24,11 @@ public class DeliveryOrder extends Order {
     @JoinColumn(name = "driver")
     private Staff driver;
 
-    public static DeliveryOrder fromCart(Cart cart, Customer customer) {
+    public static DeliveryOrder fromCart(Cart cart, Customer customer, LocalTime deliveryTime) {
         var order = new DeliveryOrder();
         order.setCustomer(customer);
         order.setOrderStatus(OrderStatus.PLACED);
+        order.setDeliveryTime(deliveryTime);
         order.setTotalPrice(cart.calculateTotalPrice());
 
         cart.getItems().forEach(item -> {

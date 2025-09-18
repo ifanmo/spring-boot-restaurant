@@ -7,14 +7,12 @@ import com.ifanmorgan.restaurant.mappers.OrderMapper;
 import com.ifanmorgan.restaurant.repositories.CartRepository;
 import com.ifanmorgan.restaurant.repositories.CustomerRepository;
 import com.ifanmorgan.restaurant.repositories.OrderRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +21,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final OrderFactory orderFactory;
     private final CustomerRepository customerRepository;
     private final CartRepository cartRepository;
     private final AuthService authService;
@@ -67,9 +64,9 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    @Transactional
-    public SimpleOrderDto checkout(UUID cartId, OrderType orderType) {
-        var cart = cartRepository.findById(cartId).orElse(null);
+
+    public OrderDto checkout(CheckoutRequest request) {
+        var cart = cartRepository.findById(request.getCartId()).orElse(null);
         if (cart == null) {
             throw new CartNotFoundException();
         }
@@ -84,14 +81,31 @@ public class OrderService {
             throw new CustomerNotFoundException();
         }
 
-        var order = orderFactory.create(orderType, cart, customer);
-
-        orderRepository.save(order);
-
-        cartService.clearCart(cart.getId());
-
-        return orderMapper.toSimpleOrderDto(order);
+        switch (request.getOrderType()) {
+            case RESTAURANT -> {
+                var order = RestaurantOrder.fromCart(cart, customer);
+                orderRepository.save(order);
+                cartService.clearCart(cart.getId());
+                return orderMapper.toRestaurantOrderDto(order);
+            }
+            case TAKEAWAY -> {
+                var order = TakeoutOrder.fromCart(cart, customer, request.getPickupTime());
+                orderRepository.save(order);
+                cartService.clearCart(cart.getId());
+                return orderMapper.toTakeoutOrderDto(order);
+            }
+            case DELIVERY -> {
+                var order = DeliveryOrder.fromCart(cart, customer, request.getDeliveryTime());
+                orderRepository.save(order);
+                cartService.clearCart(cart.getId());
+                return orderMapper.toDeliveryOrderDto(order);
+            }
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order type");
+        }
     }
+
+
+
 
 
 }

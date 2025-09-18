@@ -7,13 +7,16 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
+
     @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
-    @Mapping(target = "items", source = "orderItems")
-    OrderDto toOrderDto(Order order);
+    SimpleOrderDto toOrderDto(Order order);
 
-    @Mapping(target = "totalPrice", expression = "java(orderItem.calculateTotalPrice())")
-    OrderItemDto toOrderItemDto(OrderItem orderItem);
+    @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
+    RestaurantOrderDto toRestaurantOrderDto(RestaurantOrder order);
 
+    @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
+    DeliveryOrderDto toDeliveryOrderDto(DeliveryOrder order);
 
-    SimpleOrderDto toSimpleOrderDto(Order order);
+    @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
+    TakeoutOrderDto toTakeoutOrderDto(TakeoutOrder order);
 }

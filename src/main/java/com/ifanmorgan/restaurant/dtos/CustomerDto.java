@@ -1,6 +1,5 @@
 package com.ifanmorgan.restaurant.dtos;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.Set;
@@ -12,5 +11,5 @@ public class CustomerDto {
     private String houseNumber;
     private String street;
     private String postcode;
-    private Set<SimpleOrderDto> orders;
+    private Set<RestaurantOrderDto> orders;
 }
