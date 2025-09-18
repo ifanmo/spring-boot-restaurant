@@ -2,11 +2,13 @@ package com.ifanmorgan.restaurant.controllers;
 
 import com.ifanmorgan.restaurant.dtos.*;
 import com.ifanmorgan.restaurant.mappers.StaffMapper;
+import com.ifanmorgan.restaurant.repositories.StaffRepository;
 import com.ifanmorgan.restaurant.services.StaffService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class StaffController {
     private final StaffService staffService;
     private final StaffMapper staffMapper;
+    private final StaffRepository staffRepository;
 
     @PostMapping
     public ResponseEntity<StaffDto> createProfile(
@@ -36,6 +39,15 @@ public class StaffController {
     ) {
          var staffDto = staffService.addShift(request.getShiftId(), id);
          return ResponseEntity.status(HttpStatus.CREATED).body(staffDto);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<StaffDto> me() {
+        var staff = staffService.me();
+
+        var staffDto = staffMapper.toDto(staff);
+
+        return ResponseEntity.ok(staffDto);
     }
 
 }

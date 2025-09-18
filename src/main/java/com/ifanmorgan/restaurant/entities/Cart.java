@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -25,10 +24,10 @@ public class Cart {
     private LocalDate createdAt;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<CartItem> cartItems = new LinkedHashSet<>();
+    private Set<CartItem> items = new LinkedHashSet<>();
 
     public CartItem getItem(Long itemId) {
-        for (var item : cartItems) {
+        for (var item : items) {
             if (item.getItem().getId().equals(itemId)) {
                 return item;
             }
@@ -45,7 +44,7 @@ public class Cart {
             cartItem.setItem(item);
             cartItem.setQuantity(1);
             cartItem.setCart(this);
-            this.cartItems.add(cartItem);
+            this.items.add(cartItem);
         }
         return cartItem;
     }
@@ -53,17 +52,17 @@ public class Cart {
     public void removeItem(Long itemId) {
         var cartItem = this.getItem(itemId);
         if (cartItem != null) {
-            cartItems.remove(cartItem);
+            items.remove(cartItem);
         }
     }
 
     public void clearCart() {
-        this.getCartItems().clear();
+        this.getItems().clear();
     }
 
 
     public BigDecimal calculateTotalPrice() {
-        return cartItems.stream()
+        return items.stream()
                 .map(CartItem::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }

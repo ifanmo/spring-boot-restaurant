@@ -1,8 +1,12 @@
 package com.ifanmorgan.restaurant.entities.users;
 
+import com.ifanmorgan.restaurant.entities.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,12 +29,15 @@ public class Customer {
     private String lastName;
 
     @Column(name = "street_number")
-    private String streetNumber;
+    private String houseNumber;
 
     @Column(name = "street")
     private String street;
 
     @Column(name = "postcode")
     private String postcode;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders = new HashSet<>();
 
 }

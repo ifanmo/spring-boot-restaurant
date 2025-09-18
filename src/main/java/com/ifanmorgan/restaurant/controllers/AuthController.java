@@ -7,6 +7,7 @@ import com.ifanmorgan.restaurant.dtos.UserDto;
 import com.ifanmorgan.restaurant.entities.users.User;
 import com.ifanmorgan.restaurant.mappers.UserMapper;
 import com.ifanmorgan.restaurant.repositories.UserRepository;
+import com.ifanmorgan.restaurant.services.AuthService;
 import com.ifanmorgan.restaurant.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
@@ -71,9 +73,7 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var userId = (Long)authentication.getPrincipal();
-        var user = userRepository.findById(userId).orElse(null);
+        var user = authService.getCurrentUser();
         if (user == null) {
             return ResponseEntity.notFound().build();
         }

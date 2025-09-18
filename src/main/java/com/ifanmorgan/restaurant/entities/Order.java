@@ -3,6 +3,7 @@ package com.ifanmorgan.restaurant.entities;
 import com.ifanmorgan.restaurant.entities.users.Customer;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "order_type", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "orders")
@@ -21,7 +23,7 @@ public abstract class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private UUID id;
+    private Long id;
 
     @Column(name = "status", insertable = false)
     @Enumerated(EnumType.STRING)
@@ -34,32 +36,12 @@ public abstract class Order {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
-
-    public OrderItem getItem(Long itemId) {
-        return orderItems.stream().filter(item -> item.getId().equals(itemId))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public OrderItem addItem(MenuItem item) {
-        var orderItem = this.getItem(item.getId());
-        if (orderItem != null) {
-            orderItem.setQuantity(orderItem.getQuantity() + 1);
-        } else {
-            orderItem = new OrderItem();
-            orderItem.setItem(item);
-            orderItem.setQuantity(1);
-            orderItem.setOrder(this);
-            orderItems.add(orderItem);
-        }
-        return orderItem;
-    }
-
-    public void removeOrderItem(OrderItem orderItem) {
-        orderItems.remove(orderItem);
-    }
+    
 
     public BigDecimal calculateTotalPrice() {
         return orderItems.stream()

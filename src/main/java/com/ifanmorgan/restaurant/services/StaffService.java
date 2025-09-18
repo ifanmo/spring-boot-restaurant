@@ -10,6 +10,7 @@ import com.ifanmorgan.restaurant.repositories.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,5 +55,16 @@ public class StaffService {
         staffRepository.save(staff);
 
         return staffMapper.toDto(staff);
+    }
+
+    public Staff me() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userId = (Long)authentication.getPrincipal();
+        var staff = staffRepository.findById(userId).orElse(null);
+        if (staff == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found");
+        }
+
+        return staff;
     }
 }

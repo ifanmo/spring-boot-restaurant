@@ -2,7 +2,6 @@ package com.ifanmorgan.restaurant.controllers;
 
 import com.ifanmorgan.restaurant.dtos.CreateCustomerProfileRequest;
 import com.ifanmorgan.restaurant.dtos.CustomerDto;
-import com.ifanmorgan.restaurant.entities.users.Role;
 import com.ifanmorgan.restaurant.mappers.CustomerMapper;
 import com.ifanmorgan.restaurant.repositories.CustomerRepository;
 import com.ifanmorgan.restaurant.repositories.UserRepository;
@@ -11,11 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customers")
@@ -35,5 +30,14 @@ public class CustomerController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(customerDto);
 
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CustomerDto> me() {
+        var customer = customerService.me();
+
+        var customerDto = customerMapper.toDto(customer);
+
+        return ResponseEntity.ok(customerDto);
     }
 }

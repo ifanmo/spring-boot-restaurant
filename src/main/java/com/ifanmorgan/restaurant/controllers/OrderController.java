@@ -1,10 +1,7 @@
 package com.ifanmorgan.restaurant.controllers;
 
 import com.ifanmorgan.restaurant.dtos.*;
-import com.ifanmorgan.restaurant.exceptions.CustomerNotFoundException;
-import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
-import com.ifanmorgan.restaurant.exceptions.OrderAlreadyPlacedException;
-import com.ifanmorgan.restaurant.exceptions.OrderNotFoundException;
+import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.services.OrderService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -14,38 +11,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/orders")
 class OrderController {
-
     private final OrderService orderService;
-    @PostMapping("/restaurant")
-    public ResponseEntity<OrderDto> createRestaurantOrder(
-            @Valid @RequestBody CreateRestaurantOrderRequest request) {
-        var orderDto = orderService.createRestaurantOrder(request);
 
-        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
-
-    }
-    @PostMapping("/takeout")
-    public ResponseEntity<OrderDto> createTakeoutOrder(
-            @Valid @RequestBody CreateTakeoutOrderRequest request) {
-        var orderDto = orderService.createTakeoutOrder(request);
-
-        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
-
-    }
-
-    @PostMapping("/delivery")
-    public ResponseEntity<OrderDto> createDeliveryOrder(
-            @Valid @RequestBody CreateDeliveryOrderRequest request) {
-        var orderDto = orderService.createDeliveryOrder(request);
-
-        return new ResponseEntity<>(orderDto, HttpStatus.CREATED);
-
+    @PostMapping("/checkout")
+    public ResponseEntity<SimpleOrderDto> checkout(
+            @Valid @RequestBody CheckoutRequest request) {
+        var simpleOrderDto = orderService.checkout(request.getOrderType(), request.getCartId());
+        return new ResponseEntity<>(simpleOrderDto, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -54,8 +31,8 @@ class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable UUID id) {
-        var orderDto = orderService.getOrderById(id);
+    public ResponseEntity<OrderDto> getOrder(@PathVariable Long id) {
+        var orderDto = orderService.getOrder(id);
         return new ResponseEntity<>(orderDto, HttpStatus.OK);
     }
 
@@ -64,31 +41,20 @@ class OrderController {
         return ResponseEntity.ok(orderService.getOutstandingOrders());
     }
 
-    @PostMapping("/{id}/place-order")
-    public ResponseEntity<Void> placeOrder(@PathVariable UUID id) {
-        orderService.placeOrder(id);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/{id}/complete-order")
-    public ResponseEntity<Void> completeOrder(@PathVariable UUID id) {
+    public ResponseEntity<Void> completeOrder(@PathVariable Long id) {
         orderService.completeOrder(id);
         return ResponseEntity.ok().build();
-    }
-
-
-    @PostMapping("/{id}/items")
-    public ResponseEntity<OrderItemDto> addItemToOrder(
-            @PathVariable UUID id,
-            @Valid @RequestBody AddItemToOrderRequest request
-            ) {
-        var orderItemDto = orderService.addOrderItem(request.getItemId(), id);
-        return new ResponseEntity<>(orderItemDto, HttpStatus.CREATED);
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCustomerNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found"));
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCartNotFoundException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart not found"));
     }
 
     @ExceptionHandler(OrderNotFoundException.class)

@@ -20,12 +20,11 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final CustomerMapper customerMapper;
+    private final AuthService authService;
 
 
     public CustomerDto createCustomer(Customer customer) {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var userId = (Long)authentication.getPrincipal();
-        var user = userRepository.findById(userId).orElse(null);
+        var user = authService.getCurrentUser();
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
@@ -36,5 +35,15 @@ public class CustomerService {
         customer.setUser(user);
         customerRepository.save(customer);
         return customerMapper.toDto(customer);
+    }
+
+    public Customer me() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userId = (Long)authentication.getPrincipal();
+        var customer = customerRepository.findById(userId).orElse(null);
+        if (customer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+        return customer;
     }
 }

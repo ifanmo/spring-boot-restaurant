@@ -2,16 +2,17 @@ package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.*;
 import com.ifanmorgan.restaurant.entities.*;
-import com.ifanmorgan.restaurant.exceptions.CustomerNotFoundException;
-import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
-import com.ifanmorgan.restaurant.exceptions.OrderAlreadyPlacedException;
-import com.ifanmorgan.restaurant.exceptions.OrderNotFoundException;
+import com.ifanmorgan.restaurant.entities.users.Customer;
+import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.OrderMapper;
+import com.ifanmorgan.restaurant.repositories.CartRepository;
 import com.ifanmorgan.restaurant.repositories.CustomerRepository;
-import com.ifanmorgan.restaurant.repositories.MenuItemRepository;
 import com.ifanmorgan.restaurant.repositories.OrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,77 +25,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final CustomerRepository customerRepository;
-    private final MenuItemRepository menuItemRepository;
-
-    public OrderDto createRestaurantOrder(CreateRestaurantOrderRequest request) {
-        var customerId = request.getCustomerId();
-
-
-        var customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
-
-        var order = new RestaurantOrder();
-        order.setCustomer(customer);
-
-        orderRepository.save(order);
-        return orderMapper.toOrderDto(order);
-    }
-
-    public OrderDto createTakeoutOrder(CreateTakeoutOrderRequest request) {
-        var customerId = request.getCustomerId();
-        var customer = customerRepository.findById(customerId).orElse(null);
-
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
-
-        var order = new TakeoutOrder();
-        order.setCustomer(customer);
-        order.setPickupTime(request.getPickupTime());
-        orderRepository.save(order);
-        return orderMapper.toOrderDto(order);
-    }
-
-    public OrderDto createDeliveryOrder(CreateDeliveryOrderRequest request) {
-        var customerId = request.getCustomerId();
-        var customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
-
-        var order = new DeliveryOrder();
-        order.setCustomer(customer);
-
-        orderRepository.save(order);
-        return orderMapper.toOrderDto(order);
-
-    }
-
-    public OrderItemDto addOrderItem(Long itemId, UUID id) {
-        var order = orderRepository.findById(id).orElse(null);
-
-        if (order == null) {
-            throw new OrderNotFoundException();
-        }
-
-        if (order.getOrderStatus() != OrderStatus.IN_PROGRESS) {
-            throw new OrderAlreadyPlacedException();
-        }
-
-        var menuItem = menuItemRepository.findById(itemId).orElse(null);
-
-        if (menuItem == null) {
-            throw new MenuItemNotFoundException();
-        }
-
-        var orderItem = order.addItem(menuItem);
-
-        orderRepository.save(order);
-
-        return orderMapper.toOrderItemDto(orderItem);
-    }
+    private final CartRepository cartRepository;
+    private final AuthService authService;
+    private final CartService cartService;
 
     public List<OrderDto> getAllOrders() {
         var orders = orderRepository.findAll();
@@ -112,7 +45,7 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public OrderDto getOrderById(UUID id) {
+    public OrderDto getOrder(Long id) {
         var order = orderRepository.findById(id).orElse(null);
         if (order == null) {
             throw new OrderNotFoundException();
@@ -121,22 +54,9 @@ public class OrderService {
         return orderMapper.toOrderDto(order);
     }
 
-    public void placeOrder(UUID id) {
-        var order = orderRepository.findById(id).orElse(null);
-        if (order == null) {
-            throw new OrderNotFoundException();
-        }
 
-        if (order.getOrderStatus() != OrderStatus.IN_PROGRESS) {
-            throw new OrderAlreadyPlacedException();
-        }
 
-        order.setOrderStatus(OrderStatus.PLACED);
-
-        orderRepository.save(order);
-    }
-
-    public void completeOrder(UUID id) {
+    public void completeOrder(Long id) {
         var order = orderRepository.findById(id).orElse(null);
         if (order == null) {
             throw new OrderNotFoundException();
@@ -146,5 +66,45 @@ public class OrderService {
 
         orderRepository.save(order);
     }
+
+    @Transactional
+    public SimpleOrderDto checkout(OrderType orderType, UUID cartId) {
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if (cart == null) {
+            throw new CartNotFoundException();
+        }
+
+        if (cart.getItems().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No cart items found");
+        }
+
+        var user = authService.getCurrentUser();
+        var customer = customerRepository.findById(user.getId()).orElse(null);
+        if (customer == null) {
+            throw new CustomerNotFoundException();
+        }
+
+        var order = new RestaurantOrder();
+        order.setCustomer(customer);
+        order.setOrderStatus(OrderStatus.PLACED);
+        order.setTotalPrice(cart.calculateTotalPrice());
+
+        cart.getItems().forEach(item -> {
+            var orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setItem(item.getItem());
+            orderItem.setUnitPrice(item.getItem().getPrice());
+            orderItem.setTotalPrice(item.calculateTotalPrice());
+            order.getOrderItems().add(orderItem);
+        });
+
+        orderRepository.save(order);
+
+        cartService.clearCart(cart.getId());
+
+        return orderMapper.toSimpleOrderDto(order);
+    }
+
 
 }

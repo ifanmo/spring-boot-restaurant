@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 public class OrderDto {
-    private UUID id;
+    private Long id;
     private List<OrderItemDto> items;
     private BigDecimal totalPrice;
 }
