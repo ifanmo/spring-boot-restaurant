@@ -1,9 +1,7 @@
 package com.ifanmorgan.restaurant.entities;
 
 import com.ifanmorgan.restaurant.entities.users.Customer;
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +18,7 @@ public class TakeoutOrder extends Order {
     public static TakeoutOrder fromCart(Cart cart, Customer customer, LocalTime pickupTime) {
         var order = new TakeoutOrder();
         order.setCustomer(customer);
-        order.setOrderStatus(OrderStatus.PLACED);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setTotalPrice(cart.calculateTotalPrice());
         order.setPickupTime(pickupTime);
 

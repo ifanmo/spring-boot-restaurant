@@ -32,7 +32,7 @@ class BookingController {
         return ResponseEntity.ok(tables);
     }
 
-    @GetMapping("staff-cover")
+    @GetMapping("/staff-cover")
     public ResponseEntity<StaffCoverDto> getStaffCover() {
         var staffCoverDto = bookingService.getStaffCover();
         return new ResponseEntity<>(staffCoverDto, HttpStatus.OK);

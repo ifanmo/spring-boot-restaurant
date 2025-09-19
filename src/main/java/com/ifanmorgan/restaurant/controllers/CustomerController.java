@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customers")
 @AllArgsConstructor
 public class CustomerController {
-    private final UserRepository userRepository;
-    private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
     private final CustomerService customerService;
 

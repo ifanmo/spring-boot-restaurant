@@ -60,6 +60,10 @@ public class Cart {
         this.getItems().clear();
     }
 
+    public boolean isEmpty() {
+        return this.getItems().isEmpty();
+    }
+
 
     public BigDecimal calculateTotalPrice() {
         return items.stream()

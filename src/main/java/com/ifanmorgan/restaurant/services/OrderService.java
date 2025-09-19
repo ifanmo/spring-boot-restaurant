@@ -2,11 +2,10 @@ package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.*;
 import com.ifanmorgan.restaurant.entities.*;
+import com.ifanmorgan.restaurant.entities.users.Role;
 import com.ifanmorgan.restaurant.exceptions.*;
 import com.ifanmorgan.restaurant.mappers.OrderMapper;
-import com.ifanmorgan.restaurant.repositories.CartRepository;
-import com.ifanmorgan.restaurant.repositories.CustomerRepository;
-import com.ifanmorgan.restaurant.repositories.OrderRepository;
+import com.ifanmorgan.restaurant.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,45 +19,56 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final CartRepository cartRepository;
     private final OrderMapper orderMapper;
     private final CustomerRepository customerRepository;
-    private final CartRepository cartRepository;
     private final AuthService authService;
     private final CartService cartService;
+    private final StaffRepository staffRepository;
+    private final UserRepository userRepository;
 
-    public List<OrderDto> getAllOrders() {
+    public List<SimpleOrderDto> getAllOrders() {
         var orders = orderRepository.findAll();
         return orders
-                .stream()
-                .map(orderMapper::toOrderDto)
+                .stream().map(orderMapper::toSimpleOrderDto)
                 .collect(Collectors.toList());
     }
 
-    public List<OrderDto> getOutstandingOrders() {
-        var orders = orderRepository.findByOrderStatus(OrderStatus.PLACED);
+    public List<SimpleOrderDto> getOutstandingOrders() {
+        var orders = orderRepository.findByOrderStatus(OrderStatus.APPROVED);
         return orders
                 .stream()
-                .map(orderMapper::toOrderDto)
+                .map(orderMapper::toSimpleOrderDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderDto getOrder(Long id) {
+    public DetailedOrderDto getOrder(Long id) {
         var order = orderRepository.findById(id).orElse(null);
         if (order == null) {
             throw new OrderNotFoundException();
         }
 
-        return orderMapper.toOrderDto(order);
+        return orderMapper.toDetailedOrderDto(order);
     }
 
 
 
-    public void completeOrder(Long id) {
-        var order = orderRepository.findById(id).orElse(null);
+    public void approve(Long id) {
+        var order = orderRepository.findByIdAndOrderStatus(id, OrderStatus.PENDING).orElse(null);
         if (order == null) {
             throw new OrderNotFoundException();
         }
 
+        order.setOrderStatus(OrderStatus.APPROVED);
+
+        orderRepository.save(order);
+    }
+
+    public void complete(Long id) {
+        var order = orderRepository.findByIdAndOrderStatus(id, OrderStatus.APPROVED).orElse(null);
+        if (order == null) {
+            throw new OrderNotFoundException();
+        }
         order.setOrderStatus(OrderStatus.COMPLETED);
 
         orderRepository.save(order);
@@ -71,8 +81,8 @@ public class OrderService {
             throw new CartNotFoundException();
         }
 
-        if (cart.getItems().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No cart items found");
+        if (cart.isEmpty()) {
+            throw new CartIsEmptyException();
         }
 
         var user = authService.getCurrentUser();
@@ -103,9 +113,5 @@ public class OrderService {
             default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order type");
         }
     }
-
-
-
-
 
 }

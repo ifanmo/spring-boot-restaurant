@@ -15,7 +15,7 @@ public class RestaurantOrder extends Order {
 
         var order = new RestaurantOrder();
         order.setCustomer(customer);
-        order.setOrderStatus(OrderStatus.PLACED);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setTotalPrice(cart.calculateTotalPrice());
 
         cart.getItems().forEach(item -> {

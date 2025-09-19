@@ -28,24 +28,30 @@ class OrderController {
 
 
     @GetMapping
-    public ResponseEntity<List<OrderDto>> getAllOrders() {
+    public ResponseEntity<List<SimpleOrderDto>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrder(@PathVariable Long id) {
+    public ResponseEntity<DetailedOrderDto> getOrder(@PathVariable Long id) {
         var orderDto = orderService.getOrder(id);
-        return new ResponseEntity<>(orderDto, HttpStatus.OK);
+        return ResponseEntity.ok(orderDto);
     }
 
     @GetMapping("/outstanding")
-    public ResponseEntity<List<OrderDto>> getOutstandingOrders() {
+    public ResponseEntity<List<SimpleOrderDto>> getOutstandingOrders() {
         return ResponseEntity.ok(orderService.getOutstandingOrders());
     }
 
-    @PostMapping("/{id}/complete-order")
-    public ResponseEntity<Void> completeOrder(@PathVariable Long id) {
-        orderService.completeOrder(id);
+    @PostMapping("/{id}/approve")
+    public ResponseEntity<Void> approve(@PathVariable Long id) {
+        orderService.approve(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/complete")
+    public ResponseEntity<Void> complete(@PathVariable Long id) {
+        orderService.complete(id);
         return ResponseEntity.ok().build();
     }
 
@@ -57,6 +63,11 @@ class OrderController {
     @ExceptionHandler(CartNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCartNotFoundException() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart not found"));
+    }
+
+    @ExceptionHandler(CartIsEmptyException.class)
+    public ResponseEntity<Map<String, String>> handleCartIsEmptyException() {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart is empty"));
     }
 
     @ExceptionHandler(OrderNotFoundException.class)

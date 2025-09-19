@@ -8,5 +8,6 @@ import java.math.BigDecimal;
 public class OrderItemDto {
     private MenuItemDto menuItem;
     private Integer quantity;
+    private BigDecimal unitPrice;
     private BigDecimal totalPrice;
 }

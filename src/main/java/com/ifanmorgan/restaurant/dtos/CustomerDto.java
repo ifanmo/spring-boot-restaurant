@@ -11,5 +11,5 @@ public class CustomerDto {
     private String houseNumber;
     private String street;
     private String postcode;
-    private Set<RestaurantOrderDto> orders;
+    private Set<RestaurantCheckoutResponse> orders;
 }

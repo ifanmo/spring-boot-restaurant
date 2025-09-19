@@ -25,9 +25,12 @@ public abstract class Order {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "status", insertable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    @Column(name = "order_type")
+    private OrderType orderType;
 
     @ManyToOne
     @JoinColumn(name = "customer")
@@ -48,5 +51,6 @@ public abstract class Order {
                 .map(OrderItem::calculateTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+
 
 }

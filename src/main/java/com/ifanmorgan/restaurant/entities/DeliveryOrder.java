@@ -2,6 +2,7 @@ package com.ifanmorgan.restaurant.entities;
 
 import com.ifanmorgan.restaurant.entities.users.Customer;
 import com.ifanmorgan.restaurant.entities.users.Staff;
+import com.ifanmorgan.restaurant.entities.users.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,21 +14,18 @@ import java.time.LocalTime;
 @Entity
 @DiscriminatorValue(value = "DELIVERY")
 public class DeliveryOrder extends Order {
-    @Column(name = "delivery_status")
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatus deliveryStatus;
 
     @Column(name = "delivery_time")
     private LocalTime deliveryTime;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "driver")
     private Staff driver;
 
     public static DeliveryOrder fromCart(Cart cart, Customer customer, LocalTime deliveryTime) {
         var order = new DeliveryOrder();
         order.setCustomer(customer);
-        order.setOrderStatus(OrderStatus.PLACED);
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setDeliveryTime(deliveryTime);
         order.setTotalPrice(cart.calculateTotalPrice());
 

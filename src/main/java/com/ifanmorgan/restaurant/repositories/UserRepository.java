@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.repositories;
 
+import com.ifanmorgan.restaurant.entities.users.Role;
 import com.ifanmorgan.restaurant.entities.users.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -11,4 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
   boolean existsByEmail(String email);
 
   Optional<User> findByEmail(String email);
+
+  Optional<User> findByRole(Role role);
 }

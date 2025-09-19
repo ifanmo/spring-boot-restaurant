@@ -3,12 +3,12 @@ package com.ifanmorgan.restaurant.dtos;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
+import java.util.Set;
 
 @Data
-public class DeliveryOrderDto implements OrderDto {
+public class DetailedOrderDto implements OrderDto {
     private Long id;
     private String orderStatus;
+    private Set<OrderItemDto> orderItems;
     private BigDecimal totalPrice;
-    private LocalTime deliveryTime;
 }

@@ -9,14 +9,14 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
     @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
-    SimpleOrderDto toOrderDto(Order order);
+    DetailedOrderDto toDetailedOrderDto(Order order);
 
     @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
-    RestaurantOrderDto toRestaurantOrderDto(RestaurantOrder order);
+    SimpleOrderDto toSimpleOrderDto(Order order);
 
-    @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
-    DeliveryOrderDto toDeliveryOrderDto(DeliveryOrder order);
+    RestaurantCheckoutResponse toRestaurantOrderDto(RestaurantOrder order);
 
-    @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
-    TakeoutOrderDto toTakeoutOrderDto(TakeoutOrder order);
+    DeliveryCheckoutResponse toDeliveryOrderDto(DeliveryOrder order);
+
+    TakeawayResponseDto toTakeoutOrderDto(TakeoutOrder order);
 }

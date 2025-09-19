@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.entities.users;
 
+import com.ifanmorgan.restaurant.entities.Order;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,9 @@ public class Staff {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @OneToOne(mappedBy = "driver")
+    private Order order;
 
     @ManyToMany
     @JoinTable(name = "staff_shifts",
