@@ -1,7 +1,11 @@
 package com.ifanmorgan.restaurant.users.customers;
 
+import com.ifanmorgan.restaurant.events.EventDto;
+import com.ifanmorgan.restaurant.events.EventFullyBookedException;
+import com.ifanmorgan.restaurant.events.EventNotFoundException;
 import com.ifanmorgan.restaurant.misc.ErrorDto;
 import com.ifanmorgan.restaurant.users.UserNotFoundException;
+import com.ifanmorgan.restaurant.users.staff.StaffDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,14 @@ public class CustomerController {
 
     }
 
+    @PostMapping("/me/events")
+    public ResponseEntity<EventDto> addEvent(
+            @Valid @RequestBody AddEventToCustomer request
+    ) {
+        var eventDto = customerService.addEvent(request.getEventId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventDto);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<CustomerDto> me() {
         var customer = customerService.me();
@@ -35,8 +47,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerDto);
     }
 
-    @ExceptionHandler({UserNotFoundException.class, CustomerNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, CustomerNotFoundException.class, EventNotFoundException.class})
     public ResponseEntity<ErrorDto> handleNotFoundException(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler({EventFullyBookedException.class})
+    public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 }

@@ -47,15 +47,15 @@ public class Event {
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToMany
-    @JoinTable(name = "customer_events",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id"))
-    private Set<Event> events = new HashSet<>();
+    @ManyToMany(mappedBy = "events")
+    private Set<Customer> customers = new HashSet<>();
+
+    public boolean isFullyBooked() {
+        return customers.size() >= maxAttendees;
+    }
 
 }

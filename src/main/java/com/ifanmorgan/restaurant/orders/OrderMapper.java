@@ -10,6 +10,7 @@ public interface OrderMapper {
     DetailedOrderDto toDetailedOrderDto(Order order);
 
     @Mapping(target = "totalPrice", expression = "java(order.calculateTotalPrice())")
+    @Mapping(target = "orderStatus", source = "orderStatus")
     SimpleOrderDto toSimpleOrderDto(Order order);
 
     RestaurantCheckoutResponse toRestaurantOrderDto(RestaurantOrder order);

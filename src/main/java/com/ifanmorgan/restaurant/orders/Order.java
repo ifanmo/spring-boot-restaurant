@@ -28,7 +28,6 @@ public abstract class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-
     @ManyToOne
     @JoinColumn(name = "customer")
     private Customer customer;

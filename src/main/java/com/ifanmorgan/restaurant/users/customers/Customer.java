@@ -1,7 +1,9 @@
 package com.ifanmorgan.restaurant.users.customers;
 
+import com.ifanmorgan.restaurant.events.Event;
 import com.ifanmorgan.restaurant.orders.Order;
 import com.ifanmorgan.restaurant.users.User;
+import com.ifanmorgan.restaurant.users.staff.Shift;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,5 +42,15 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private Set<Order> orders = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "customer_events",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private Set<Event> events = new HashSet<>();
+
+    public void addEvent(Event event) {
+        events.add(event);
+    }
 
 }

@@ -18,10 +18,6 @@ public class DeliveryOrder extends Order {
     @Column(name = "delivery_time")
     private LocalTime deliveryTime;
 
-    @OneToOne
-    @JoinColumn(name = "driver")
-    private User driver;
-
     public static DeliveryOrder fromCart(Cart cart, Customer customer, LocalTime deliveryTime) {
         var order = new DeliveryOrder();
         order.setCustomer(customer);

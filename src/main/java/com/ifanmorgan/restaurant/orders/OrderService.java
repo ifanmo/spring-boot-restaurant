@@ -92,18 +92,21 @@ public class OrderService {
         switch (request.getOrderType()) {
             case RESTAURANT -> {
                 var order = RestaurantOrder.fromCart(cart, customer);
+                order.setOrderStatus(OrderStatus.PENDING);
                 orderRepository.save(order);
                 cartService.clearCart(cart.getId());
                 return orderMapper.toRestaurantOrderDto(order);
             }
             case TAKEAWAY -> {
                 var order = TakeoutOrder.fromCart(cart, customer, request.getPickupTime());
+                order.setOrderStatus(OrderStatus.PENDING);
                 orderRepository.save(order);
                 cartService.clearCart(cart.getId());
                 return orderMapper.toTakeoutOrderDto(order);
             }
             case DELIVERY -> {
                 var order = DeliveryOrder.fromCart(cart, customer, request.getDeliveryTime());
+                order.setOrderStatus(OrderStatus.PENDING);
                 orderRepository.save(order);
                 cartService.clearCart(cart.getId());
                 return orderMapper.toDeliveryOrderDto(order);
