@@ -27,13 +27,21 @@ public class BookingService {
     private final TableRepository tableRepository;
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
+    private final AuthService authService;
 
     @Transactional
     public BookingDto createBooking(CreateBookingRequest request) {
         final long DEFAULT_DURATION_IN_HOURS = 1;
+
+        var user = authService.getCurrentUser();
+        var customer = customerRepository.findById(user.getId()).orElse(null);
+        if (customer == null) {
+            throw new CustomerNotFoundException();
+        }
+
         var startTime = request.getBookingTime();
-        var customerId = request.getCustomerId();
         var endTime = startTime.plusHours(DEFAULT_DURATION_IN_HOURS);
+
         if (request.getBookingExtension() != null) {
            endTime = endTime.plusMinutes(request.getBookingExtension());
         }
@@ -43,10 +51,6 @@ public class BookingService {
         var timeSlot = timeSlotRepository.findByStartTime(startTime).orElse(null);
         if (timeSlot == null) {
             throw new TimeSlotNotFoundException();
-        }
-        var customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
         }
 
         var table = tableRepository.findTableForBooking(bookingDate, startTime, endTime, guests).orElse(null);

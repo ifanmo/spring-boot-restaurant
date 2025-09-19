@@ -8,6 +8,7 @@ import com.ifanmorgan.restaurant.mappers.OrderMapper;
 import com.ifanmorgan.restaurant.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,14 +25,12 @@ public class OrderService {
     private final CustomerRepository customerRepository;
     private final AuthService authService;
     private final CartService cartService;
-    private final StaffRepository staffRepository;
-    private final UserRepository userRepository;
 
     public List<SimpleOrderDto> getAllOrders() {
         var orders = orderRepository.findAll();
         return orders
                 .stream().map(orderMapper::toSimpleOrderDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<SimpleOrderDto> getOutstandingOrders() {
@@ -39,7 +38,7 @@ public class OrderService {
         return orders
                 .stream()
                 .map(orderMapper::toSimpleOrderDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public DetailedOrderDto getOrder(Long id) {

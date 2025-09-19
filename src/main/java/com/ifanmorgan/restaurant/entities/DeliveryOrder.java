@@ -20,7 +20,7 @@ public class DeliveryOrder extends Order {
 
     @OneToOne
     @JoinColumn(name = "driver")
-    private Staff driver;
+    private User driver;
 
     public static DeliveryOrder fromCart(Cart cart, Customer customer, LocalTime deliveryTime) {
         var order = new DeliveryOrder();

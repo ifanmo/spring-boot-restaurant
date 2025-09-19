@@ -26,7 +26,7 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<CartDto> createCart() {
+    public ResponseEntity<CreateCartResponse> createCart() {
         var cartDto = cartService.createCart();
 
         return new ResponseEntity<>(cartDto, HttpStatus.CREATED);

@@ -30,9 +30,6 @@ public class Staff {
     @Column(name = "last_name")
     private String lastName;
 
-    @OneToOne(mappedBy = "driver")
-    private Order order;
-
     @ManyToMany
     @JoinTable(name = "staff_shifts",
             joinColumns = @JoinColumn(name = "staff_id"),

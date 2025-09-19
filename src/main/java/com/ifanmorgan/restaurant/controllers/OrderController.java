@@ -55,6 +55,7 @@ class OrderController {
         return ResponseEntity.ok().build();
     }
 
+
     @ExceptionHandler(CustomerNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleCustomerNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found"));

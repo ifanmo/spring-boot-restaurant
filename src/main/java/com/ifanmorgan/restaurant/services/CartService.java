@@ -2,7 +2,9 @@ package com.ifanmorgan.restaurant.services;
 
 import com.ifanmorgan.restaurant.dtos.CartDto;
 import com.ifanmorgan.restaurant.dtos.CartItemDto;
+import com.ifanmorgan.restaurant.dtos.CreateCartResponse;
 import com.ifanmorgan.restaurant.entities.Cart;
+import com.ifanmorgan.restaurant.entities.Category;
 import com.ifanmorgan.restaurant.exceptions.CartNotFoundException;
 import com.ifanmorgan.restaurant.exceptions.MenuItemNotFoundException;
 import com.ifanmorgan.restaurant.exceptions.OrderNotFoundException;
@@ -21,10 +23,14 @@ public class CartService {
     private MenuItemRepository itemRepository;
     private CartMapper mapper;
 
-    public CartDto createCart() {
+    public CreateCartResponse createCart() {
         var cart = new Cart();
         cart = cartRepository.save(cart);
-        return mapper.toCartDto(cart);
+        var special = itemRepository.findByCategory(Category.SPECIAL).orElse(null);
+        if (special == null) {
+            throw new MenuItemNotFoundException();
+        }
+        return new CreateCartResponse(cart.getId(), special);
     }
 
     public CartItemDto addCartItem(Long itemId, UUID id) {

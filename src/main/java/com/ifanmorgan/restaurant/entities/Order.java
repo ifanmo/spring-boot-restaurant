@@ -29,8 +29,6 @@ public abstract class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @Column(name = "order_type")
-    private OrderType orderType;
 
     @ManyToOne
     @JoinColumn(name = "customer")

@@ -35,8 +35,6 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    @OneToMany(mappedBy = "menuItem")
-    private Set<CartItem> cartItems = new LinkedHashSet<>();
 
 
 }
