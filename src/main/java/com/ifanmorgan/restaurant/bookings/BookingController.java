@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.bookings;
 
+import com.ifanmorgan.restaurant.misc.ErrorDto;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -51,29 +52,14 @@ class BookingController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(TimeSlotNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleTimeSlotNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "TimeSlot not found"));
-    }
-
-    @ExceptionHandler(BookingNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleBookingNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Booking not found"));
-    }
-
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCustomerNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found"));
-    }
-
-    @ExceptionHandler(TablesNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleTablesNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Tables not found"));
+    @ExceptionHandler({TimeSlotNotFoundException.class, BookingNotFoundException.class, CustomerNotFoundException.class})
+    public ResponseEntity<ErrorDto> handleNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 
     @ExceptionHandler(TableNotAvailableException.class)
-    public ResponseEntity<Map<String, String>> handleTableNotAvailable() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "No tables available for this time"));
+    public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 
 }

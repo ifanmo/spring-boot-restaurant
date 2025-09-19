@@ -1,6 +1,7 @@
 package com.ifanmorgan.restaurant.users.staff;
 
 import com.ifanmorgan.restaurant.users.Role;
+import com.ifanmorgan.restaurant.users.UserNotFoundException;
 import com.ifanmorgan.restaurant.users.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,10 +22,7 @@ public class StaffService {
         var userId = (Long)authentication.getPrincipal();
         var user = userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-        }
-        if (user.getRole().equals(Role.CUSTOMER)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only Staff can create staff profiles");
+            throw new UserNotFoundException();
         }
 
         staff.setUser(user);
@@ -35,7 +33,7 @@ public class StaffService {
     public StaffDto addShift(Long shiftId, Long id) {
         var staff = staffRepository.findById(id).orElse(null);
         if (staff == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found");
+            throw new StaffNotFoundException();
         }
 
         var shift = shiftRepository.findById(shiftId).orElse(null);

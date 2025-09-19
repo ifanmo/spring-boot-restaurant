@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.auth;
 
+import com.ifanmorgan.restaurant.misc.ErrorDto;
 import com.ifanmorgan.restaurant.users.UserDto;
 import com.ifanmorgan.restaurant.users.UserMapper;
 import com.ifanmorgan.restaurant.users.UserRepository;
@@ -77,7 +78,7 @@ public class AuthController {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Void> handleBadCredentialException() {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<ErrorDto> handleBadCredentialException(Exception e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
     }
 }

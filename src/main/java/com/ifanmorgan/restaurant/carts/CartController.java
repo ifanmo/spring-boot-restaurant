@@ -1,6 +1,7 @@
 package com.ifanmorgan.restaurant.carts;
 
 import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
+import com.ifanmorgan.restaurant.misc.ErrorDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -65,14 +66,9 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCartNotFoundException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart not found"));
-    }
-
-    @ExceptionHandler(MenuItemNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleMenuItemException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Menu Item not found"));
+    @ExceptionHandler({CartNotFoundException.class, MenuItemNotFoundException.class})
+    public ResponseEntity<ErrorDto> handleCartNotFoundException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 
 }

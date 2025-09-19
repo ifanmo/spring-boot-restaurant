@@ -64,6 +64,7 @@ public class BookingService {
     @Transactional
     public List<RestaurantTable> getAvailableTables(GetAvailableTablesRequest request) {
         final long DEFAULT_DURATION_IN_HOURS = 1;
+
         var bookingDate = request.getBookingDate();
         var startTime = request.getStartTime();
         var endTime = startTime.plusHours(DEFAULT_DURATION_IN_HOURS);
@@ -71,9 +72,6 @@ public class BookingService {
         if (request.getBookingExtension() != null) {
             endTime = endTime.plusMinutes(request.getBookingExtension());
         }
-
-        System.out.println(endTime);
-
         var tables = tableRepository.findAvailableTables(startTime ,endTime, bookingDate).orElse(null);
         if (tables == null) {
             throw new TablesNotFoundException();

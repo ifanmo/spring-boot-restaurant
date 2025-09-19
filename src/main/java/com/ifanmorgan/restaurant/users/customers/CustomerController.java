@@ -1,5 +1,7 @@
 package com.ifanmorgan.restaurant.users.customers;
 
+import com.ifanmorgan.restaurant.misc.ErrorDto;
+import com.ifanmorgan.restaurant.users.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,5 +33,10 @@ public class CustomerController {
         var customerDto = customerMapper.toDto(customer);
 
         return ResponseEntity.ok(customerDto);
+    }
+
+    @ExceptionHandler({UserNotFoundException.class, CustomerNotFoundException.class})
+    public ResponseEntity<ErrorDto> handleNotFoundException(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 }

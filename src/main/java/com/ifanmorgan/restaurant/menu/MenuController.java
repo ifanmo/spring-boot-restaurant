@@ -1,6 +1,7 @@
 package com.ifanmorgan.restaurant.menu;
 
 
+import com.ifanmorgan.restaurant.misc.ErrorDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class MenuController {
     }
 
     @ExceptionHandler(MenuItemNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleMenuItemNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Menu Item not found"));
+    public ResponseEntity<ErrorDto> handleItemNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 }

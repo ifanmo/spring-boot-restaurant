@@ -9,8 +9,8 @@ public class CreateCustomerProfileRequest {
     private String firstName;
     @NotNull(message = "last name is required")
     private String lastName;
-    @NotNull(message = "street number is required")
-    private String streetNumber;
+    @NotNull(message = "house number is required")
+    private String houseNumber;
     @NotNull(message = "street name is required")
     private String street;
     @NotNull(message = "postcode is required")

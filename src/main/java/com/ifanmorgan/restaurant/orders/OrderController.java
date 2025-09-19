@@ -3,6 +3,7 @@ package com.ifanmorgan.restaurant.orders;
 import com.ifanmorgan.restaurant.carts.CartIsEmptyException;
 import com.ifanmorgan.restaurant.carts.CartNotFoundException;
 import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
+import com.ifanmorgan.restaurant.misc.ErrorDto;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -57,34 +58,19 @@ class OrderController {
     }
 
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCustomerNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Customer not found"));
+    @ExceptionHandler({
+            CustomerNotFoundException.class,
+            OrderNotFoundException.class,
+            MenuItemNotFoundException.class,
+            CartNotFoundException.class,
+    })
+    public ResponseEntity<ErrorDto> handleCustomerNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
 
-    @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCartNotFoundException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart not found"));
-    }
-
-    @ExceptionHandler(CartIsEmptyException.class)
-    public ResponseEntity<Map<String, String>> handleCartIsEmptyException() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Cart is empty"));
-    }
-
-    @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleOrderNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Order not found"));
-    }
-
-    @ExceptionHandler(MenuItemNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleMenuItemNotFound() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Menu Item not found"));
-    }
-
-    @ExceptionHandler(OrderAlreadyPlacedException.class)
-    public ResponseEntity<Map<String, String>> handleOrderAlreadyPlaced() {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Order already placed."));
+    @ExceptionHandler({CartNotFoundException.class, CartIsEmptyException.class, OrderAlreadyPlacedException.class})
+    public ResponseEntity<ErrorDto> handleCartNotFoundException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }
 
 }
