@@ -103,6 +103,11 @@ public class BookingService {
 
     public StaffCoverDto getStaffCover() {
 
+        var numberOfGuests = bookingRepository.getNumberOfGuests();
+        if (numberOfGuests == null || numberOfGuests == 0) {
+            throw new NoGuestsFoundException();
+
+        }
         // 2 Chefs Required Per 10 Customers
         var numberOfChefs = bookingRepository.getNumberOfGuests() / 10 * 2;
         // 1 Waiter Required Per 2 Tables

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ public class StaffController {
     private final StaffService staffService;
     private final StaffMapper staffMapper;
 
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER')")
     @PostMapping
     public ResponseEntity<StaffDto> createProfile(
             @Valid @RequestBody CreateStaffProfileRequest request
@@ -26,6 +28,7 @@ public class StaffController {
 
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("{id}/shifts")
     public ResponseEntity<StaffDto> addShift(
             @PathVariable Long id,
@@ -35,6 +38,7 @@ public class StaffController {
          return ResponseEntity.status(HttpStatus.CREATED).body(staffDto);
     }
 
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER', 'MANAGER')")
     @GetMapping("/me")
     public ResponseEntity<StaffDto> me() {
         var staff = staffService.me();

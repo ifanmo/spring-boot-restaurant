@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
-    @Mapping(target = "customer.id", source = "customerId")
     Booking toEntity(CreateBookingRequest request);
 
     @Mapping(target = "customerId", source = "customer.id")

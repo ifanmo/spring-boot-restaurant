@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +27,14 @@ class BookingController {
         return ResponseEntity.ok(tables);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/staff-cover")
     public ResponseEntity<StaffCoverDto> getStaffCover() {
         var staffCoverDto = bookingService.getStaffCover();
         return new ResponseEntity<>(staffCoverDto, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping
     public ResponseEntity<BookingDto> createBooking(
             @Valid @RequestBody CreateBookingRequest request) {
@@ -40,19 +43,26 @@ class BookingController {
         return new ResponseEntity<>(bookingDto, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('WAITER', 'MANAGER')")
     @PostMapping("/{id}/approve-booking")
     public ResponseEntity<Void> approveBooking(@PathVariable Long id) {
         bookingService.approveBooking(id);
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
         bookingService.deleteBooking(id);
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler({TimeSlotNotFoundException.class, BookingNotFoundException.class, CustomerNotFoundException.class})
+    @ExceptionHandler({
+            NoGuestsFoundException.class,
+            TimeSlotNotFoundException.class,
+            BookingNotFoundException.class,
+            CustomerNotFoundException.class
+    })
     public ResponseEntity<ErrorDto> handleNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
     }
