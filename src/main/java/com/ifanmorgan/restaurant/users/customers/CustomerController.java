@@ -30,7 +30,7 @@ public class CustomerController {
 
     }
 
-    @PostMapping("/me/events")
+    @PostMapping("/events")
     public ResponseEntity<EventDto> addEvent(
             @Valid @RequestBody AddEventToCustomer request
     ) {

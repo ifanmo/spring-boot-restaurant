@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.auth;
 
+import com.ifanmorgan.restaurant.users.Role;
 import com.ifanmorgan.restaurant.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -55,5 +56,10 @@ public class JwtService {
 
     public Long getUserIdFromToken(String token) {
          return Long.valueOf(getClaims(token).getSubject());
+    }
+
+    public Role getRoleFromToken(String token) {
+        Claims claims = getClaims(token);
+        return Role.valueOf(claims.get("role", String.class));
     }
 }

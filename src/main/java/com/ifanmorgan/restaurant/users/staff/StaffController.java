@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class StaffController {
     private final StaffService staffService;
     private final StaffMapper staffMapper;
-    private final StaffRepository staffRepository;
 
     @PostMapping
     public ResponseEntity<StaffDto> createProfile(
