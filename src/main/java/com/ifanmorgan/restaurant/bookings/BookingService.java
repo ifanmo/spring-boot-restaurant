@@ -47,6 +47,10 @@ public class BookingService {
         if (table == null) {
             throw new TableNotAvailableException();
         }
+
+        if(bookingRepository.existsByCustomerIdAndBookingDate(customer.getId(), bookingDate)) {
+            throw new MultipleBookingsException();
+        }
         var booking = new Booking();
         booking.setBookingDate(bookingDate);
         booking.setStartTime(startTime);
