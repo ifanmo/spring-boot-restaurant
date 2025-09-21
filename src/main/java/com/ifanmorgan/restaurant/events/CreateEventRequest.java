@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.events;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,7 @@ public class CreateEventRequest {
     private String name;
     @NotNull(message = "date is required")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Future(message = "event must be in the future")
     private LocalDate date;
     @NotNull(message = "time is required")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

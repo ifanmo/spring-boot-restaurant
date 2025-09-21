@@ -15,6 +15,7 @@ public class CreateBookingRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @FutureOrPresent(message = "Date cannot be in the past")
     @NotNull(message = "Booking date is required")
+    @Future(message = "booking must be in the future")
     private LocalDate bookingDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @NotNull(message = "Booking time is required")

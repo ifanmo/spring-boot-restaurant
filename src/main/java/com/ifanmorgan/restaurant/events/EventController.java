@@ -1,7 +1,5 @@
 package com.ifanmorgan.restaurant.events;
 
-import com.ifanmorgan.restaurant.carts.CartNotFoundException;
-import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
 import com.ifanmorgan.restaurant.misc.ErrorDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +16,8 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<EventDto>> getAllEvents() {
-        var events = eventService.getAllEvents();
+    public ResponseEntity<List<EventDto>> getAllUpcomingEvents() {
+        var events = eventService.getAllUpcomingEvents();
         return ResponseEntity.ok().body(events);
     }
 
@@ -44,7 +42,7 @@ public class EventController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler({EventAlreadyApprovedException.class, EventAlreadyComplete.class})
+    @ExceptionHandler({EventAlreadyApprovedException.class, EventAlreadyComplete.class, SameDayEventException.class})
     public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
     }

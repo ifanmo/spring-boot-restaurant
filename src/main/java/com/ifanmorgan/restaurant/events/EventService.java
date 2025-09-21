@@ -6,6 +6,7 @@ import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,6 +22,10 @@ public class EventService {
         var customer = customerRepository.findById(user.getId()).orElse(null);
         if (customer == null) {
             throw new CustomerNotFoundException();
+        }
+
+        if (eventRepository.existsByDateAndCustomer(request.getDate(), customer)) {
+            throw new SameDayEventException();
         }
 
         var event = eventMapper.toEntity(request);
@@ -63,8 +68,8 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public List<EventDto> getAllEvents() {
-        var events = eventRepository.findAllByStatus(EventStatus.APPROVED);
+    public List<EventDto> getAllUpcomingEvents() {
+        var events = eventRepository.findAllByStatusAndAfterToday(EventStatus.APPROVED, LocalDate.now());
         return events
                 .stream()
                 .map(eventMapper::toDto)
