@@ -1,9 +1,6 @@
 package com.ifanmorgan.restaurant.bookings;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +12,7 @@ public class GetAvailableTablesRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @FutureOrPresent(message = "Date cannot be in the past")
     @NotNull(message = "Booking date is required")
+    @Future(message = "booking date must be in the future")
     private LocalDate bookingDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @NotNull(message = "Booking time is required")
