@@ -2,7 +2,6 @@ package com.ifanmorgan.restaurant.orders;
 
 import com.ifanmorgan.restaurant.carts.Cart;
 import com.ifanmorgan.restaurant.users.customers.Customer;
-import com.ifanmorgan.restaurant.users.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,5 @@
 package com.ifanmorgan.restaurant.auth;
 
-import com.ifanmorgan.restaurant.misc.ErrorDto;
 import com.ifanmorgan.restaurant.users.UserDto;
 import com.ifanmorgan.restaurant.users.UserMapper;
 import com.ifanmorgan.restaurant.users.UserRepository;
@@ -11,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 

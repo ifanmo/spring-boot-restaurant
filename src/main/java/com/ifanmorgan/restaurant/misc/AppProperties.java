@@ -1,4 +1,4 @@
-package com.ifanmorgan.restaurant;
+package com.ifanmorgan.restaurant.misc;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

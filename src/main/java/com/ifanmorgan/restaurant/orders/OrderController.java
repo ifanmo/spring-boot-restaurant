@@ -1,10 +1,5 @@
 package com.ifanmorgan.restaurant.orders;
 
-import com.ifanmorgan.restaurant.carts.CartIsEmptyException;
-import com.ifanmorgan.restaurant.carts.CartNotFoundException;
-import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
-import com.ifanmorgan.restaurant.misc.ErrorDto;
-import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,14 +1,11 @@
 package com.ifanmorgan.restaurant.carts;
 
-import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
-import com.ifanmorgan.restaurant.misc.ErrorDto;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.UUID;
 
 @RestController

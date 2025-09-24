@@ -1,7 +1,5 @@
 package com.ifanmorgan.restaurant.bookings;
 
-import com.ifanmorgan.restaurant.misc.ErrorDto;
-import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @AllArgsConstructor
