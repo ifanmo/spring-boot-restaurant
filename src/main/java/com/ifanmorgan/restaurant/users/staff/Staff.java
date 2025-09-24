@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,19 +30,29 @@ public class Staff {
     @Column(name = "last_name")
     private String lastName;
 
-    @ManyToMany
-    @JoinTable(name = "staff_shifts",
-            joinColumns = @JoinColumn(name = "staff_id"),
-            inverseJoinColumns = @JoinColumn(name = "shift_id"))
-    private Set<Shift> shifts = new HashSet<>();
+    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<StaffShift> shifts = new HashSet<>();
 
-    public void addShift(Shift shift) {
-        this.shifts.add(shift);
+    public StaffShift getStaffShift(Long shiftId) {
+        for (var shift : shifts) {
+            if (shift.getShift().getId().equals(shiftId)) {
+                return shift;
+            }
+        }
+        return null;
+    }
+
+    public void addShift(Shift shift, LocalDate date) {
+        var staffShift = new StaffShift();
+        staffShift.setShift(shift);
+        staffShift.setDate(date);
+        staffShift.setStaff(this);
+        this.shifts.add(staffShift);
     }
 
     public int calculateHoursWorked() {
         return shifts.stream()
-                .map(Shift::calculateDuration)
+                .map(StaffShift::getDuration)
                 .reduce(0, Integer::sum);
 
     }

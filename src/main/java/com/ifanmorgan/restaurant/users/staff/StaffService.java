@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+
 @Service
 @AllArgsConstructor
 public class StaffService {
@@ -30,7 +32,7 @@ public class StaffService {
         return staffMapper.toDto(staff);
     }
 
-    public StaffDto addShift(Long shiftId, Long id) {
+    public StaffDto addShift(Long shiftId, Long id, LocalDate date) {
         var staff = staffRepository.findById(id).orElse(null);
         if (staff == null) {
             throw new StaffNotFoundException();
@@ -41,7 +43,7 @@ public class StaffService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Shift not found");
         }
 
-        staff.addShift(shift);
+        staff.addShift(shift, date);
 
         staffRepository.save(staff);
 

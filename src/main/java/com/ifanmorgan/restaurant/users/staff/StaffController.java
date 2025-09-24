@@ -34,7 +34,7 @@ public class StaffController {
             @PathVariable Long id,
             @Valid @RequestBody AddShiftToStaffRequest request
     ) {
-         var staffDto = staffService.addShift(request.getShiftId(), id);
+         var staffDto = staffService.addShift(request.getShiftId(), id, request.getDate());
          return ResponseEntity.status(HttpStatus.CREATED).body(staffDto);
     }
 

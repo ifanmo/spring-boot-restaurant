@@ -9,4 +9,5 @@ public interface StaffMapper {
 
     @Mapping(target = "hoursWorked", expression = "java(staff.calculateHoursWorked())")
     StaffDto toDto(Staff staff);
+
 }

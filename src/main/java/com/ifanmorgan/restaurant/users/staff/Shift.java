@@ -26,11 +26,6 @@ public class Shift {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    @Column(name = "date")
-    private LocalDate date;
-
-    @ManyToMany(mappedBy = "shifts")
-    private Set<Staff> staff = new LinkedHashSet<>();
 
     public Integer calculateDuration() {
         return Math.toIntExact(Duration.between(startTime, endTime).toHours());
