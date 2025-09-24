@@ -54,15 +54,22 @@ create table shifts
 (
     id         BIGINT auto_increment primary key,
     start_time TIME not null,
-    date DATE not null
+    end_time TIME not null
 );
 
 create table staff_shifts
 (
+    id       BIGINT auto_increment
+        primary key,
     staff_id BIGINT not null,
     shift_id BIGINT not null,
-    constraint staff_shifts_pk
-        primary key (staff_id, shift_id)
+    date     DATE   not null,
+    constraint staff_shifts_date_unique
+        unique (date, shift_id, staff_id),
+    constraint staff_shifts_shifts_id_fk
+        foreign key (shift_id) references shifts (id),
+    constraint staff_shifts_staff_id_fk
+        foreign key (staff_id) references staff (id)
 );
 
 alter table bookings
@@ -90,13 +97,6 @@ alter table staff
     add constraint staff_users_id_fk
         foreign key (id) references users (id);
 
-alter table staff_shifts
-    add constraint staff_shifts_shifts_id_fk
-        foreign key (shift_id) references shifts (id);
-
-alter table staff_shifts
-    add constraint staff_shifts_staff_id_fk
-        foreign key (staff_id) references staff (id);
 
 
 

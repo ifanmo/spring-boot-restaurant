@@ -3,4 +3,5 @@ spring:
     name: store
   datasource:
     url: ${SPRING_DATA_SOURCE_URL}
-websiteUrl: https://myrestaurant.com
+app:
+  websiteUrl: https://cafe94.com

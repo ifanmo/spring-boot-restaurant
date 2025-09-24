@@ -5,4 +5,5 @@ spring:
     password: goodmorning
   jpa:
     show-sql: true
-websiteUrl: http://localhost:4242
+app:
+  websiteUrl: http://localhost:4242
