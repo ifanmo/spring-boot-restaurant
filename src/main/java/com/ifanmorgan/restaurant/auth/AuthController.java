@@ -77,8 +77,5 @@ public class AuthController {
         return ResponseEntity.ok(userDto);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorDto> handleBadCredentialException(Exception e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(e.getMessage()));
-    }
+
 }

@@ -48,8 +48,4 @@ public class StaffController {
         return ResponseEntity.ok(staffDto);
     }
 
-    @ExceptionHandler({UserNotFoundException.class, StaffNotFoundException.class})
-    public ResponseEntity<ErrorDto> handleNotFoundException(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
 }

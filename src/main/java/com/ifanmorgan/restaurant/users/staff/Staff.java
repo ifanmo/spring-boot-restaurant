@@ -33,9 +33,9 @@ public class Staff {
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<StaffShift> shifts = new HashSet<>();
 
-    public StaffShift getStaffShift(Long shiftId) {
+    public StaffShift getStaffShift(Long shiftId, LocalDate date) {
         for (var shift : shifts) {
-            if (shift.getShift().getId().equals(shiftId)) {
+            if (shift.getShift().getId().equals(shiftId) && shift.getDate() == date) {
                 return shift;
             }
         }
@@ -43,11 +43,13 @@ public class Staff {
     }
 
     public void addShift(Shift shift, LocalDate date) {
-        var staffShift = new StaffShift();
-        staffShift.setShift(shift);
-        staffShift.setDate(date);
-        staffShift.setStaff(this);
-        this.shifts.add(staffShift);
+            if (getStaffShift(shift.getId(), date) == null) {
+            var staffShift = new StaffShift();
+            staffShift.setShift(shift);
+            staffShift.setDate(date);
+            staffShift.setStaff(this);
+            this.shifts.add(staffShift);
+        }
     }
 
     public int calculateHoursWorked() {

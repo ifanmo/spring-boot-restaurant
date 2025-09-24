@@ -42,13 +42,4 @@ public class EventController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler({EventAlreadyApprovedException.class, EventAlreadyComplete.class, SameDayEventException.class})
-    public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
-    }
-
-    @ExceptionHandler(EventNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleNotFound(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
 }

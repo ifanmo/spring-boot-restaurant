@@ -66,9 +66,4 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler({CartNotFoundException.class, MenuItemNotFoundException.class})
-    public ResponseEntity<ErrorDto> handleCartNotFoundException(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
-    }
-
 }

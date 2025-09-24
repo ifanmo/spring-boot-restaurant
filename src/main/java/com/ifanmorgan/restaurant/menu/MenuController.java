@@ -33,8 +33,4 @@ public class MenuController {
         return ResponseEntity.ok(dto);
     }
 
-    @ExceptionHandler(MenuItemNotFoundException.class)
-    public ResponseEntity<ErrorDto> handleItemNotFound(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
 }

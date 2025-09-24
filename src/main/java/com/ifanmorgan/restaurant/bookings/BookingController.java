@@ -57,19 +57,4 @@ class BookingController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler({
-            NoGuestsFoundException.class,
-            TimeSlotNotFoundException.class,
-            BookingNotFoundException.class,
-            CustomerNotFoundException.class
-    })
-    public ResponseEntity<ErrorDto> handleNotFound(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
-
-    @ExceptionHandler({TableNotAvailableException.class, MultipleBookingsException.class})
-    public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
-    }
-
 }

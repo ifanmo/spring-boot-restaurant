@@ -49,13 +49,4 @@ public class CustomerController {
         return ResponseEntity.ok(customerDto);
     }
 
-    @ExceptionHandler({UserNotFoundException.class, CustomerNotFoundException.class, EventNotFoundException.class})
-    public ResponseEntity<ErrorDto> handleNotFoundException(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
-
-    @ExceptionHandler({EventFullyBookedException.class})
-    public ResponseEntity<ErrorDto> handleBadRequest(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
-    }
 }

@@ -63,20 +63,4 @@ class OrderController {
         return ResponseEntity.ok().build();
     }
 
-
-    @ExceptionHandler({
-            CustomerNotFoundException.class,
-            OrderNotFoundException.class,
-            MenuItemNotFoundException.class,
-            CartNotFoundException.class,
-    })
-    public ResponseEntity<ErrorDto> handleCustomerNotFound(Exception e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto(e.getMessage()));
-    }
-
-    @ExceptionHandler({CartNotFoundException.class, CartIsEmptyException.class, OrderAlreadyPlacedException.class})
-    public ResponseEntity<ErrorDto> handleCartNotFoundException(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(e.getMessage()));
-    }
-
 }
