@@ -1,6 +1,7 @@
 package com.ifanmorgan.restaurant.users.staff;
 
 import com.ifanmorgan.restaurant.users.User;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "staff")
+@Tag(name = "Staff")
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

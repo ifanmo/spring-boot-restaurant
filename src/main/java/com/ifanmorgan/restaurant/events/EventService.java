@@ -61,7 +61,7 @@ public class EventService {
             throw new EventNotFoundException();
         }
         if (event.getStatus() != EventStatus.APPROVED) {
-            throw new EventAlreadyComplete();
+            throw new EventComplete();
         }
 
         event.setStatus(EventStatus.FINISHED);

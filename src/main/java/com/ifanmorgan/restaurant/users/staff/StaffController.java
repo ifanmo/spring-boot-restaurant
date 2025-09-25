@@ -1,7 +1,7 @@
 package com.ifanmorgan.restaurant.users.staff;
 
-import com.ifanmorgan.restaurant.misc.ErrorDto;
-import com.ifanmorgan.restaurant.users.UserNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("staff")
 @AllArgsConstructor
+@Tag(name = "Staff")
 public class StaffController {
     private final StaffService staffService;
     private final StaffMapper staffMapper;
 
-    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER')")
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER', 'MANAGER')")
     @PostMapping
+    @Operation(summary = "A staff member can create a profile")
     public ResponseEntity<StaffDto> createProfile(
             @Valid @RequestBody CreateStaffProfileRequest request
     ) {
@@ -30,6 +32,7 @@ public class StaffController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("{id}/shifts")
+    @Operation(summary = "A manager can add shifts for a chef, waiter or delivery driver")
     public ResponseEntity<StaffDto> addShift(
             @PathVariable Long id,
             @Valid @RequestBody AddShiftToStaffRequest request
@@ -40,6 +43,7 @@ public class StaffController {
 
     @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER', 'MANAGER')")
     @GetMapping("/me")
+    @Operation(summary = "A staff member can view their profile")
     public ResponseEntity<StaffDto> me() {
         var staff = staffService.me();
 

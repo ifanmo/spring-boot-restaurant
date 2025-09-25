@@ -1,5 +1,7 @@
 package com.ifanmorgan.restaurant.users;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@Tag(name = "Users")
 public class UserController {
 
     private final UserRepository repository;
@@ -21,6 +24,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping
+    @Operation(summary = "A user can register an account with role 'CUSTOMER', 'CHEF', 'WAITER' or 'DELIVERY_DRIVER'")
     public ResponseEntity<UserDto> registerUser(
             @Valid @RequestBody RegisterUserRequest request) {
 

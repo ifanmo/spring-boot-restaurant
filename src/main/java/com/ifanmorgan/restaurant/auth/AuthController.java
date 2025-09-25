@@ -3,6 +3,8 @@ package com.ifanmorgan.restaurant.auth;
 import com.ifanmorgan.restaurant.users.UserDto;
 import com.ifanmorgan.restaurant.users.UserMapper;
 import com.ifanmorgan.restaurant.users.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Auth")
 @AllArgsConstructor
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -25,6 +28,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
+    @Operation(summary = "A user can login with email and password credentials")
     public ResponseEntity<JwtResponse> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {

@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
             OrderAlreadyPlacedException.class,
             EventFullyBookedException.class,
             EventAlreadyApprovedException.class,
-            EventAlreadyComplete.class,
+            EventComplete.class,
             SameDayEventException.class,
             TableNotAvailableException.class,
             MultipleBookingsException.class
