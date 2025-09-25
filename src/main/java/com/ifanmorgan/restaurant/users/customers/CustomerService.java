@@ -2,15 +2,9 @@ package com.ifanmorgan.restaurant.users.customers;
 
 import com.ifanmorgan.restaurant.auth.AuthService;
 import com.ifanmorgan.restaurant.events.*;
-import com.ifanmorgan.restaurant.users.Role;
 import com.ifanmorgan.restaurant.users.UserNotFoundException;
-import com.ifanmorgan.restaurant.users.UserRepository;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @AllArgsConstructor
 @Service

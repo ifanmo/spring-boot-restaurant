@@ -5,6 +5,7 @@ import com.ifanmorgan.restaurant.orders.RestaurantCheckoutResponse;
 import com.ifanmorgan.restaurant.orders.SimpleOrderDto;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,6 +15,6 @@ public class CustomerDto {
     private String houseNumber;
     private String street;
     private String postcode;
-    private Set<SimpleOrderDto> orders;
+    private List<SimpleOrderDto> orders;
     private Set<EventDto> events;
 }
