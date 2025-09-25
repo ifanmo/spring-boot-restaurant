@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="store" />
+    <module name="restaurant" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.ifanmorgan.restaurant.RestaurantApplication" />
     <method v="2">
       <option name="Make" enabled="true" />

@@ -24,7 +24,7 @@ the most hours, as well as the most active customer
 
 ```bash
 git clone https://github.com/ifanmo/spring-boot-restaurant
-cd cafe-94-backend
+cd restaurant-api
 ```
 
 ### 2. Configure Environment Variables
