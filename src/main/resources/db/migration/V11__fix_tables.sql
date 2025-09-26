@@ -1,1 +1,1 @@
-##Fix the tables in deployment Clean
+##Fix the tables in deployment Clean db
