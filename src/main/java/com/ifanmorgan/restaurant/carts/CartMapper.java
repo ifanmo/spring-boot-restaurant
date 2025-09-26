@@ -1,5 +1,7 @@
 package com.ifanmorgan.restaurant.carts;
 
+import com.ifanmorgan.restaurant.carts.dtos.CartDto;
+import com.ifanmorgan.restaurant.carts.dtos.CartItemDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

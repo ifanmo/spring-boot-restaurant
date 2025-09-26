@@ -1,8 +1,7 @@
 package com.ifanmorgan.restaurant.users.customers;
 
 import com.ifanmorgan.restaurant.events.EventDto;
-import com.ifanmorgan.restaurant.orders.RestaurantCheckoutResponse;
-import com.ifanmorgan.restaurant.orders.SimpleOrderDto;
+import com.ifanmorgan.restaurant.orders.dtos.SimpleOrderDto;
 import lombok.Data;
 
 import java.util.List;

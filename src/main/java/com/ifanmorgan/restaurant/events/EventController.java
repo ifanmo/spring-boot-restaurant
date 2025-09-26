@@ -1,5 +1,7 @@
 package com.ifanmorgan.restaurant.events;
 
+import com.ifanmorgan.restaurant.events.dtos.CreateEventRequest;
+import com.ifanmorgan.restaurant.events.dtos.CreateEventResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

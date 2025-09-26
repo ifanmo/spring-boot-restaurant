@@ -3,7 +3,6 @@ package com.ifanmorgan.restaurant.users.customers;
 import com.ifanmorgan.restaurant.events.Event;
 import com.ifanmorgan.restaurant.orders.Order;
 import com.ifanmorgan.restaurant.users.User;
-import com.ifanmorgan.restaurant.users.staff.Shift;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

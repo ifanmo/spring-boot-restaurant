@@ -2,6 +2,8 @@ package com.ifanmorgan.restaurant.users.customers;
 
 import com.ifanmorgan.restaurant.auth.AuthService;
 import com.ifanmorgan.restaurant.events.*;
+import com.ifanmorgan.restaurant.events.exceptions.EventFullyBookedException;
+import com.ifanmorgan.restaurant.events.exceptions.EventNotFoundException;
 import com.ifanmorgan.restaurant.users.UserNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

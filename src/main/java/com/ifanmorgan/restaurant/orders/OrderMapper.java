@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.orders;
 
+import com.ifanmorgan.restaurant.orders.dtos.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

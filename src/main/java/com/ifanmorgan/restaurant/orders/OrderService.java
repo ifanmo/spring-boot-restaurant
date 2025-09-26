@@ -1,10 +1,15 @@
 package com.ifanmorgan.restaurant.orders;
 
-import com.ifanmorgan.restaurant.carts.CartIsEmptyException;
-import com.ifanmorgan.restaurant.carts.CartNotFoundException;
+import com.ifanmorgan.restaurant.carts.exceptions.CartIsEmptyException;
+import com.ifanmorgan.restaurant.carts.exceptions.CartNotFoundException;
 import com.ifanmorgan.restaurant.carts.CartRepository;
 import com.ifanmorgan.restaurant.carts.CartService;
 import com.ifanmorgan.restaurant.auth.AuthService;
+import com.ifanmorgan.restaurant.orders.dtos.CheckoutRequest;
+import com.ifanmorgan.restaurant.orders.dtos.DetailedOrderDto;
+import com.ifanmorgan.restaurant.orders.dtos.OrderDto;
+import com.ifanmorgan.restaurant.orders.dtos.SimpleOrderDto;
+import com.ifanmorgan.restaurant.orders.exceptions.OrderNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import lombok.AllArgsConstructor;

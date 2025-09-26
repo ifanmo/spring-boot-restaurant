@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.menu;
 
+import com.ifanmorgan.restaurant.menu.dtos.MenuItemDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

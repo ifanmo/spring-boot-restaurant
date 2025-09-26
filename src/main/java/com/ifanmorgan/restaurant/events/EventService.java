@@ -1,6 +1,12 @@
 package com.ifanmorgan.restaurant.events;
 
 import com.ifanmorgan.restaurant.auth.AuthService;
+import com.ifanmorgan.restaurant.events.dtos.CreateEventRequest;
+import com.ifanmorgan.restaurant.events.dtos.CreateEventResponse;
+import com.ifanmorgan.restaurant.events.exceptions.EventAlreadyApprovedException;
+import com.ifanmorgan.restaurant.events.exceptions.EventComplete;
+import com.ifanmorgan.restaurant.events.exceptions.EventNotFoundException;
+import com.ifanmorgan.restaurant.events.exceptions.SameDayEventException;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import lombok.AllArgsConstructor;

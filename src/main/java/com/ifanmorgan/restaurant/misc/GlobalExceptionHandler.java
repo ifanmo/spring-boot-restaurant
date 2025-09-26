@@ -1,12 +1,12 @@
 package com.ifanmorgan.restaurant.misc;
 
-import com.ifanmorgan.restaurant.bookings.*;
-import com.ifanmorgan.restaurant.carts.CartIsEmptyException;
-import com.ifanmorgan.restaurant.carts.CartNotFoundException;
-import com.ifanmorgan.restaurant.events.*;
-import com.ifanmorgan.restaurant.menu.MenuItemNotFoundException;
-import com.ifanmorgan.restaurant.orders.OrderAlreadyPlacedException;
-import com.ifanmorgan.restaurant.orders.OrderNotFoundException;
+import com.ifanmorgan.restaurant.bookings.exceptions.*;
+import com.ifanmorgan.restaurant.carts.exceptions.CartIsEmptyException;
+import com.ifanmorgan.restaurant.carts.exceptions.CartNotFoundException;
+import com.ifanmorgan.restaurant.events.exceptions.*;
+import com.ifanmorgan.restaurant.menu.exceptions.MenuItemNotFoundException;
+import com.ifanmorgan.restaurant.orders.exceptions.OrderAlreadyPlacedException;
+import com.ifanmorgan.restaurant.orders.exceptions.OrderNotFoundException;
 import com.ifanmorgan.restaurant.users.UserNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.staff.StaffNotFoundException;

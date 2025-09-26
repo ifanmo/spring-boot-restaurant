@@ -1,7 +1,7 @@
 package com.ifanmorgan.restaurant.reports;
 
-import com.ifanmorgan.restaurant.bookings.TimeSlotDto;
-import com.ifanmorgan.restaurant.bookings.TimeSlotRepository;
+import com.ifanmorgan.restaurant.bookings.dtos.TimeSlotDto;
+import com.ifanmorgan.restaurant.bookings.repositories.TimeSlotRepository;
 import com.ifanmorgan.restaurant.menu.MenuItemRepository;
 import com.ifanmorgan.restaurant.menu.MenuMapper;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 @AllArgsConstructor
 @Service

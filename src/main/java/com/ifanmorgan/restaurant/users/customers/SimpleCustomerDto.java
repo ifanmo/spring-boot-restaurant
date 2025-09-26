@@ -1,12 +1,7 @@
 package com.ifanmorgan.restaurant.users.customers;
 
-import com.ifanmorgan.restaurant.events.EventDto;
-import com.ifanmorgan.restaurant.orders.SimpleOrderDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor

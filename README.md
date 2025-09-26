@@ -1,24 +1,59 @@
-# Cafe-94 Restaurant API
+# Spring Restaurant API
 
-## About this Repository 
+## 📚 About this Repository 
 
 This repository contains an API, created with Spring, for an all-in-one management system for a local restaurant.
 
 The system is comprised of multiple features that are common to retail and food outlets.
 
-It will provide login functionality for both customers and staff. Customers can create profile that includes their name, address, 
-order history and any events they are attending. Staff profiles include their name, shifts and total hours worked
 
-Customers can check availability and book a table for a given date. They can also view information about the menu, create orders (in-house, takeaway and delivery),
-as well as book and register for catered events.
+## 📋 Features
 
-Staff will be divided into waiters, managers, chefs and delivery drivers. The system will allow staff members to carry
-out common tasks associated with their respective roles. This includes handling customers' booking, event and order requests. 
+- **Authentication Functionality**
+    - Supports both **customers** and **staff** registration and login.
 
-Managers can also view weekly reports that include the busiest restaurant periods, most popular menu items, the staff member who worked
-the most hours, as well as the most active customer
+- **Customer Profiles**
+    - Name and address
+    - Order history
+    - Events attended
 
-## Getting Started
+- **Staff Profiles**
+    - Name
+    - Shifts
+    - Total hours worked
+
+- **Customer Functionality**
+    - Check table availability and book tables for a given date
+    - View menu information
+    - Create orders:
+        - In-house
+        - Takeaway
+        - Delivery
+    - Book and register for catered events
+
+- **Staff Roles and Tasks**
+    - Staff divided into:
+        - Waiters
+        - Managers
+        - Chefs
+        - Delivery drivers
+    - Role-based task handling:
+        - Manage table bookings
+        - Manage event bookings
+        - Accept customer orders
+        - Mark orders as complete
+        - Add special items to the menu
+        
+
+- **Manager-Specific Features**
+    - Generate information for the past 7 days on:
+        - The top 5 busiest periods for bookings
+        - The top 5 most popular menu items
+        - The top 5 members of staff by hours worked
+        - The top 5 most active customers
+    - Assign shifts to staff members
+
+## 🛠️ Setup
 
 ### 1. Clone the Repository
 

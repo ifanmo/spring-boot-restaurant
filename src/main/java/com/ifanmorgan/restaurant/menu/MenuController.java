@@ -1,6 +1,8 @@
 package com.ifanmorgan.restaurant.menu;
 
 
+import com.ifanmorgan.restaurant.menu.dtos.MenuItemDto;
+import com.ifanmorgan.restaurant.menu.dtos.UpdateSpecialRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
