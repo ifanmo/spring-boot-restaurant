@@ -10,4 +10,5 @@ import java.util.List;
 public class SimpleStaffDto {
     private String firstName;
     private String lastName;
+    private int hoursWorked;
 }

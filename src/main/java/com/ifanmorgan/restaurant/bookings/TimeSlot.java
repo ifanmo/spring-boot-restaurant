@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,5 +20,8 @@ public class TimeSlot {
 
     @Column(name = "start_time")
     private LocalTime startTime;
+
+    @OneToMany(mappedBy = "timeSlot")
+    private List<Booking> bookings = new ArrayList<>();
 
 }

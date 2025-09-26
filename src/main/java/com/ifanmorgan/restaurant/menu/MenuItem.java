@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.menu;
 
+import com.ifanmorgan.restaurant.orders.OrderItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +36,7 @@ public class MenuItem {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-
+    @OneToMany(mappedBy = "menuItem")
+    private List<OrderItem> orderItems = new ArrayList<>();
 
 }
