@@ -12,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 @AllArgsConstructor
 @Service
 public class ReportService {
@@ -22,8 +25,12 @@ public class ReportService {
     private final TimeSlotRepository timeSlotRepository;
 
     public ReportDto getReport() {
+        var sevenDaysAgo = LocalDateTime.now().minusDays(7);
         var reportDto = new ReportDto();
-        var customers = customerRepository.findMostActiveCustomer(PageRequest.of(0, 5));
+
+        var customers = customerRepository.findMostActiveCustomersInLast7Days(
+                PageRequest.of(0, 5),
+                sevenDaysAgo);
         var customerResponse = customers
                 .stream()
                 .map(c -> new SimpleCustomerDto(
@@ -35,15 +42,17 @@ public class ReportService {
                 .toList();
         reportDto.setMostActiveCustomers(customerResponse);
 
-        var staff = staffRepository.findMostActiveStaff(PageRequest.of(0, 5));
+        var staff = staffRepository.findMostActiveStaff(
+                PageRequest.of(0, 5),
+                sevenDaysAgo.toLocalDate());
         var staffResponse = staff.stream().map(s -> new SimpleStaffDto(s.getFirstName(), s.getLastName(), s.calculateHoursWorked())).toList();
         reportDto.setMostActiveStaff(staffResponse);
 
-        var menuItems = menuItemRepository.findMostPopularMenuItems(PageRequest.of(0, 5));
+        var menuItems = menuItemRepository.findMostPopularMenuItems(PageRequest.of(0, 5), sevenDaysAgo);
         var menuItemResponse = menuItems.stream().map(menuMapper::toDto).toList();
         reportDto.setMostPopularItems(menuItemResponse);
 
-        var timeSlots = timeSlotRepository.getBusiestPeriods(PageRequest.of(0, 5));
+        var timeSlots = timeSlotRepository.getBusiestPeriods(PageRequest.of(0, 5), sevenDaysAgo);
         var timeSlotResponse = timeSlots.stream().map(t -> new TimeSlotDto(t.getStartTime())).toList();
         reportDto.setBusiestPeriods(timeSlotResponse);
 
