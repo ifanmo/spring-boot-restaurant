@@ -28,7 +28,7 @@ public abstract class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @Column(name = "order_type")
+    @Column(name = "order_type", insertable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
 
