@@ -1,8 +1,6 @@
 package com.ifanmorgan.restaurant.orders;
 
-import com.ifanmorgan.restaurant.orders.dtos.CheckoutRequest;
-import com.ifanmorgan.restaurant.orders.dtos.DetailedOrderDto;
-import com.ifanmorgan.restaurant.orders.dtos.SimpleOrderDto;
+import com.ifanmorgan.restaurant.orders.dtos.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,15 +19,33 @@ import java.util.List;
 class OrderController {
     private final OrderService orderService;
 
-    @PreAuthorize("hasRole('CUSTOMER')")
-    @PostMapping("/checkout")
-    @Operation(summary = "A customer can create an order from a cart")
-    public ResponseEntity<?> checkout(
-            @Valid @RequestBody CheckoutRequest request) {
+    @PostMapping("/restaurant")
+    @Operation(summary = "A waiter can create a restaurant order")
+    public ResponseEntity<?> createRestaurantOrder(
+            @Valid @RequestBody CreateRestaurantOrderRequest request) {
 
-            var orderDto = orderService.checkout(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
-        }
+        var orderDto = orderService.createRestaurantOrder(request.getCartId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+    }
+
+    @PostMapping("/takeout")
+    @Operation(summary = "A customer can create a takeout order")
+    public ResponseEntity<?> createTakeoutOrder(
+            @Valid @RequestBody CreateTakeoutOrderRequest request) {
+
+        var orderDto = orderService.createTakeoutOrder(request.getCartId(), request.getPickupTime());
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+    }
+
+
+    @PostMapping("/delivery")
+    @Operation(summary = "A customer can create a delivery order")
+    public ResponseEntity<?> createDeliveryOrder(
+            @Valid @RequestBody CreateDeliveryOrderRequest request) {
+
+        var orderDto = orderService.createDeliveryOrder(request.getCartId(), request.getDeliveryTime());
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
+    }
 
     @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER')")
     @GetMapping

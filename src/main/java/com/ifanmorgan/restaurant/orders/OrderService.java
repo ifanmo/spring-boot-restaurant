@@ -1,23 +1,22 @@
 package com.ifanmorgan.restaurant.orders;
 
+import com.ifanmorgan.restaurant.carts.Cart;
 import com.ifanmorgan.restaurant.carts.exceptions.CartIsEmptyException;
 import com.ifanmorgan.restaurant.carts.exceptions.CartNotFoundException;
 import com.ifanmorgan.restaurant.carts.CartRepository;
 import com.ifanmorgan.restaurant.carts.CartService;
 import com.ifanmorgan.restaurant.auth.AuthService;
-import com.ifanmorgan.restaurant.orders.dtos.CheckoutRequest;
-import com.ifanmorgan.restaurant.orders.dtos.DetailedOrderDto;
-import com.ifanmorgan.restaurant.orders.dtos.OrderDto;
-import com.ifanmorgan.restaurant.orders.dtos.SimpleOrderDto;
+import com.ifanmorgan.restaurant.orders.dtos.*;
 import com.ifanmorgan.restaurant.orders.exceptions.OrderNotFoundException;
+import com.ifanmorgan.restaurant.users.customers.Customer;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -78,46 +77,52 @@ public class OrderService {
     }
 
 
-    public OrderDto checkout(CheckoutRequest request) {
-        var cart = cartRepository.findById(request.getCartId()).orElse(null);
-        if (cart == null) {
-            throw new CartNotFoundException();
-        }
+    public OrderDto createRestaurantOrder(UUID cartId) {
+        var cart = getValidatedCart(cartId);
+        var customer = getCurrentCustomer();
 
+        var order = RestaurantOrder.fromCart(cart, customer);
+        order = (RestaurantOrder) processOrder(order, cartId);
+        return orderMapper.toRestaurantOrderDto(order);
+    }
+
+    public OrderDto createTakeoutOrder(UUID cartId, LocalTime pickupTime) {
+        var cart = getValidatedCart(cartId);
+        var customer = getCurrentCustomer();
+
+        var order = TakeoutOrder.fromCart(cart, customer, pickupTime);
+        order = (TakeoutOrder) processOrder(order, cartId);
+        return orderMapper.toTakeoutOrderDto(order);
+    }
+
+    public OrderDto createDeliveryOrder(UUID cartId, LocalTime deliveryTime) {
+        var cart = getValidatedCart(cartId);
+        var customer = getCurrentCustomer();
+
+        var order = DeliveryOrder.fromCart(cart, customer, deliveryTime);
+        order = (DeliveryOrder)processOrder(order, cartId);
+        return orderMapper.toDeliveryOrderDto(order);
+    }
+
+    private Cart getValidatedCart(UUID cartId) {
+        var cart = cartRepository.findById(cartId).orElseThrow(CartNotFoundException::new);
         if (cart.isEmpty()) {
             throw new CartIsEmptyException();
         }
-
-        var user = authService.getCurrentUser();
-        var customer = customerRepository.findById(user.getId()).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
-
-        switch (request.getOrderType()) {
-            case RESTAURANT -> {
-                var order = RestaurantOrder.fromCart(cart, customer);
-                order.setOrderStatus(OrderStatus.PENDING);
-                orderRepository.save(order);
-                cartService.clearCart(cart.getId());
-                return orderMapper.toRestaurantOrderDto(order);
-            }
-            case TAKEAWAY -> {
-                var order = TakeoutOrder.fromCart(cart, customer, request.getPickupTime());
-                order.setOrderStatus(OrderStatus.PENDING);
-                orderRepository.save(order);
-                cartService.clearCart(cart.getId());
-                return orderMapper.toTakeoutOrderDto(order);
-            }
-            case DELIVERY -> {
-                var order = DeliveryOrder.fromCart(cart, customer, request.getDeliveryTime());
-                order.setOrderStatus(OrderStatus.PENDING);
-                orderRepository.save(order);
-                cartService.clearCart(cart.getId());
-                return orderMapper.toDeliveryOrderDto(order);
-            }
-            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid order type");
-        }
+        return cart;
     }
 
+    private Customer getCurrentCustomer() {
+        var user = authService.getCurrentUser();
+        return customerRepository.findById(user.getId()).orElseThrow(CustomerNotFoundException::new);
+    }
+
+    private Order processOrder(Order order, UUID cartId) {
+        order.setOrderStatus(OrderStatus.PENDING);
+        orderRepository.save(order);
+        cartService.clearCart(cartId);
+        return order;
+    }
 }
+
+
