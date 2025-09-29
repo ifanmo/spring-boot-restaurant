@@ -100,47 +100,21 @@ http://localhost:8080
 Swagger UI is available at:
 
 ```bash
-http://localhost:8080/swagger-ui.html
+http://localhost:8080/api/v1/swagger-ui.html
 ```
 
 ---
+In order to test the API endpoint you must first register an account with a role of either
+'CUSTOMER', 'MANAGER', 'WAITER', 'CHEF', or 'DELIVERY DRIVER'.
 
-## 🧪 Example API Flow
+Customers must then create a customer profile, all other roles must create a staff profile.
 
-Here's a sample flow to help you understand how to interact with the API after starting the application.
-
-### 1. Get All Menu Items
-
-```bash
-GET /menu
-```
 
 The database is automatically populated with 10 sample menu items using a Flyway migration script.
 
-### 2. Create a Cart
+## 🧪 Example Customer Registration and Login
 
-```bash
-POST /carts
-```
-
-This will return the cart ID. You don't need to be logged in to create a cart.
-
-### 3. Add Menu Items to Cart
-
-Once you have a cart ID, you can add products to it by sending:
-
-```bash
-POST /carts/{cartId}/items
-```
-
-**Request body example**:
-```json
-{
-  "productId": 1
-}
-```
-
-### 4. Register a New Customer
+### 1. Register a New Customer
 To check out, you have to register as a customer and login:
 
 ```bash
@@ -157,7 +131,7 @@ POST /users
 }
 ```
 
-### 5. Login to Get an Access Token
+### 2. Login to Get an Access Token
 
 ```bash
 POST /auth/login 
@@ -178,11 +152,10 @@ POST /auth/login
 }
 ```
 
-### 6. Checkout
-You can checkout either a restaurant, delivery or takeout order by changing the request body
-
+### 3. Create Customer Profile
+You must create a customer profile before checking out the order
 ```bash
-POST /checkout 
+POST /customers 
 ```
 
 **Headers**
@@ -193,6 +166,69 @@ Authorization: Bearer generated-json-web-token
 **Request body**
 ```json
 {
-  "cartId": "your-cart-id"
+  "firstName": "Dave",
+  "lastName": "Wilson",
+  "houseNumber": "2",
+  "street": "King Street",
+  "postcode": "LS2976P"
+}
+```
+
+## 🧪 Example Staff Registration and Login
+
+### 1. Register a New Staff Member
+To check out, you have to register as a customer and login:
+
+```bash
+POST /users
+```
+
+**Request body**:
+
+```json
+{
+  "email": "user1@example.com",
+  "password": "password",
+  "role": "WAITER"
+}
+```
+
+### 2. Login to Get an Access Token
+
+```bash
+POST /auth/login 
+```
+
+**Request body**:
+```json
+{
+  "email": "user2@example.com",
+  "password": "password"
+}
+```
+
+**Response body**:
+```json
+{
+  "token": "generated-json-web-token"
+}
+```
+
+### 3. Create Staff Profile
+You must create a customer profile before checking out the order
+```bash
+POST /staff 
+```
+
+**Headers**
+```bash
+Authorization: Bearer generated-json-web-token
+```
+
+**Request body**
+```json
+{
+  "firstName": "Jay",
+  "lastName": "Buckley"
 }
 ```

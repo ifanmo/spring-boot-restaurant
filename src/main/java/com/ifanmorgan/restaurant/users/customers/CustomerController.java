@@ -20,7 +20,7 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    @Operation(summary = "A customer can create a profile")
+    @Operation(summary = "A user with role 'CUSTOMER' can create a profile")
     public ResponseEntity<CustomerDto> createProfile(
             @Valid @RequestBody CreateCustomerProfileRequest request
     ) {
@@ -32,7 +32,7 @@ public class CustomerController {
     }
 
     @PostMapping("/events")
-    @Operation(summary = "A customer can register from an upcoming event" +
+    @Operation(summary = "Register from an upcoming event" +
             " providing there are spaces available")
     public ResponseEntity<EventDto> addEvent(
             @Valid @RequestBody AddEventToCustomer request
