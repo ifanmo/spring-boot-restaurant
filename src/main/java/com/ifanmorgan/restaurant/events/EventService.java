@@ -7,6 +7,7 @@ import com.ifanmorgan.restaurant.events.exceptions.EventAlreadyApprovedException
 import com.ifanmorgan.restaurant.events.exceptions.EventComplete;
 import com.ifanmorgan.restaurant.events.exceptions.EventNotFoundException;
 import com.ifanmorgan.restaurant.events.exceptions.SameDayEventException;
+import com.ifanmorgan.restaurant.users.customers.Customer;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import lombok.AllArgsConstructor;
@@ -24,11 +25,7 @@ public class EventService {
     private final EventRepository eventRepository;
 
     public CreateEventResponse create(CreateEventRequest request) {
-        var user = authService.getCurrentUser();
-        var customer = customerRepository.findById(user.getId()).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
+        var customer = getCurrentCustomer();
 
         if (eventRepository.existsByDateAndCustomer(request.getDate(), customer)) {
             throw new SameDayEventException();
@@ -80,5 +77,14 @@ public class EventService {
                 .stream()
                 .map(eventMapper::toDto)
                 .toList();
+    }
+
+    private Customer getCurrentCustomer() {
+        var user = authService.getCurrentUser();
+        var customer = customerRepository.findById(user.getId()).orElse(null);
+        if (customer == null) {
+            throw new CustomerNotFoundException();
+        }
+        return customer;
     }
 }

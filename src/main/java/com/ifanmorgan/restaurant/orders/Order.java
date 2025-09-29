@@ -28,6 +28,10 @@ public abstract class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @Column(name = "order_type")
+    @Enumerated(EnumType.STRING)
+    private OrderType orderType;
+
     @ManyToOne
     @JoinColumn(name = "customer")
     private Customer customer;

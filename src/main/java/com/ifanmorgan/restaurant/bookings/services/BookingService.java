@@ -13,6 +13,7 @@ import com.ifanmorgan.restaurant.bookings.mappers.BookingMapper;
 import com.ifanmorgan.restaurant.bookings.repositories.BookingRepository;
 import com.ifanmorgan.restaurant.bookings.repositories.TableRepository;
 import com.ifanmorgan.restaurant.bookings.repositories.TimeSlotRepository;
+import com.ifanmorgan.restaurant.users.customers.Customer;
 import com.ifanmorgan.restaurant.users.customers.CustomerNotFoundException;
 import com.ifanmorgan.restaurant.users.customers.CustomerRepository;
 import jakarta.transaction.Transactional;
@@ -35,11 +36,7 @@ public class BookingService {
     public BookingDto createBooking(CreateBookingRequest request) {
         final long DEFAULT_DURATION_IN_HOURS = 1;
 
-        var user = authService.getCurrentUser();
-        var customer = customerRepository.findById(user.getId()).orElse(null);
-        if (customer == null) {
-            throw new CustomerNotFoundException();
-        }
+        var customer = getCurrentCustomer();
 
         var startTime = request.getBookingTime();
         var endTime = startTime.plusHours(DEFAULT_DURATION_IN_HOURS);
@@ -76,6 +73,7 @@ public class BookingService {
         return bookingMapper.toDto(booking);
 
     }
+
 
     @Transactional
     public List<RestaurantTable> getAvailableTables(GetAvailableTablesRequest request) {
@@ -130,5 +128,14 @@ public class BookingService {
         var numberOfWaiters = bookingRepository.getNumberOfTables() / 2;
 
         return new StaffCoverDto(numberOfWaiters, numberOfChefs);
+    }
+
+    private Customer getCurrentCustomer() {
+        var user = authService.getCurrentUser();
+        var customer = customerRepository.findById(user.getId()).orElse(null);
+        if (customer == null) {
+            throw new CustomerNotFoundException();
+        }
+        return customer;
     }
 }

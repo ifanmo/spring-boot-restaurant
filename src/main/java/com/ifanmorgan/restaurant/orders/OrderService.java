@@ -36,6 +36,31 @@ public class OrderService {
                 .toList();
     }
 
+    public List<SimpleOrderDto> getAllRestaurantOrders() {
+        var orders = orderRepository.findByOrderType(OrderType.RESTAURANT);
+        return orders
+                .stream()
+                .map(orderMapper::toSimpleOrderDto)
+                .toList();
+    }
+
+    public List<SimpleOrderDto> getAllTakeoutOrders() {
+        var orders = orderRepository.findByOrderType(OrderType.TAKEAWAY);
+        return orders
+                .stream()
+                .map(orderMapper::toSimpleOrderDto)
+                .toList();
+    }
+
+    public List<SimpleOrderDto> getAllDeliveryOrders() {
+        var orders = orderRepository.findByOrderType(OrderType.DELIVERY);
+        return orders
+                .stream()
+                .map(orderMapper::toSimpleOrderDto)
+                .toList();
+    }
+
+
     public List<SimpleOrderDto> getOutstandingOrders() {
         var orders = orderRepository.findByOrderStatus(OrderStatus.APPROVED);
         return orders
@@ -82,7 +107,7 @@ public class OrderService {
         var customer = getCurrentCustomer();
 
         var order = RestaurantOrder.fromCart(cart, customer);
-        order = (RestaurantOrder) processOrder(order, cartId);
+        processOrder(order, cartId);
         return orderMapper.toRestaurantOrderDto(order);
     }
 
@@ -91,7 +116,7 @@ public class OrderService {
         var customer = getCurrentCustomer();
 
         var order = TakeoutOrder.fromCart(cart, customer, pickupTime);
-        order = (TakeoutOrder) processOrder(order, cartId);
+        processOrder(order, cartId);
         return orderMapper.toTakeoutOrderDto(order);
     }
 
@@ -100,7 +125,7 @@ public class OrderService {
         var customer = getCurrentCustomer();
 
         var order = DeliveryOrder.fromCart(cart, customer, deliveryTime);
-        order = (DeliveryOrder)processOrder(order, cartId);
+        processOrder(order, cartId);
         return orderMapper.toDeliveryOrderDto(order);
     }
 
@@ -117,12 +142,12 @@ public class OrderService {
         return customerRepository.findById(user.getId()).orElseThrow(CustomerNotFoundException::new);
     }
 
-    private Order processOrder(Order order, UUID cartId) {
+    private void processOrder(Order order, UUID cartId) {
         order.setOrderStatus(OrderStatus.PENDING);
         orderRepository.save(order);
         cartService.clearCart(cartId);
-        return order;
     }
+
 }
 
 

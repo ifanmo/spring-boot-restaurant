@@ -20,6 +20,7 @@ class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/restaurant")
+    @PreAuthorize("hasRole('WAITER')")
     @Operation(summary = "A waiter can create a restaurant order")
     public ResponseEntity<?> createRestaurantOrder(
             @Valid @RequestBody CreateRestaurantOrderRequest request) {
@@ -29,6 +30,7 @@ class OrderController {
     }
 
     @PostMapping("/takeout")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @Operation(summary = "A customer can create a takeout order")
     public ResponseEntity<?> createTakeoutOrder(
             @Valid @RequestBody CreateTakeoutOrderRequest request) {
@@ -39,6 +41,7 @@ class OrderController {
 
 
     @PostMapping("/delivery")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @Operation(summary = "A customer can create a delivery order")
     public ResponseEntity<?> createDeliveryOrder(
             @Valid @RequestBody CreateDeliveryOrderRequest request) {
@@ -47,8 +50,30 @@ class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderDto);
     }
 
-    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER', 'DELIVERY_DRIVER')")
+    @GetMapping("/restaurant")
+    @Operation(summary = "A staff member can view all restaurant orders")
+    public ResponseEntity<List<SimpleOrderDto>> getAllRestaurantOrders() {
+        return ResponseEntity.ok(orderService.getAllRestaurantOrders());
+    }
+
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER', 'DELIVERY_DRIVER')")
+    @GetMapping("/takeout")
+    @Operation(summary = "A staff member can view all takeout orders")
+    public ResponseEntity<List<SimpleOrderDto>> getAllTakeoutOrders() {
+        return ResponseEntity.ok(orderService.getAllTakeoutOrders());
+    }
+
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER', 'DELIVERY_DRIVER')")
+    @GetMapping("/del")
+    @Operation(summary = "A staff member can all delivery orders")
+    public ResponseEntity<List<SimpleOrderDto>> getAllDeliveryOrders() {
+        return ResponseEntity.ok(orderService.getAllDeliveryOrders());
+    }
+
+    @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER', 'WAITER')")
     @GetMapping
+    @Operation(summary = "A staff member can view all orders")
     public ResponseEntity<List<SimpleOrderDto>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
