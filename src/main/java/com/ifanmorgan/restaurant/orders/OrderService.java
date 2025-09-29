@@ -45,7 +45,7 @@ public class OrderService {
     }
 
     public List<SimpleOrderDto> getAllTakeoutOrders() {
-        var orders = orderRepository.findByOrderType(OrderType.TAKEAWAY);
+        var orders = orderRepository.findByOrderType(OrderType.TAKEOUT);
         return orders
                 .stream()
                 .map(orderMapper::toSimpleOrderDto)

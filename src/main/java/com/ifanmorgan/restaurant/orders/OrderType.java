@@ -2,6 +2,6 @@ package com.ifanmorgan.restaurant.orders;
 
 public enum OrderType {
     RESTAURANT,
-    TAKEAWAY,
+    TAKEOUT,
     DELIVERY
 }

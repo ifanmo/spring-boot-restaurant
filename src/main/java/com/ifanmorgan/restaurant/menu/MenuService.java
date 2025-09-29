@@ -1,7 +1,10 @@
 package com.ifanmorgan.restaurant.menu;
 
+import com.ifanmorgan.restaurant.logging.LoggingController;
 import com.ifanmorgan.restaurant.menu.dtos.MenuItemDto;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

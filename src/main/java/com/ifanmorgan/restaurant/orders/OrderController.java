@@ -65,8 +65,8 @@ class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'MANAGER', 'DELIVERY_DRIVER')")
-    @GetMapping("/del")
-    @Operation(summary = "A staff member can all delivery orders")
+    @GetMapping("/delivery")
+    @Operation(summary = "A staff member can view all delivery orders")
     public ResponseEntity<List<SimpleOrderDto>> getAllDeliveryOrders() {
         return ResponseEntity.ok(orderService.getAllDeliveryOrders());
     }
