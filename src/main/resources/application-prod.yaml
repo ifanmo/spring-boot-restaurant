@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: store
   datasource:
     url: ${SPRING_DATASOURCE_URL}
 app:
