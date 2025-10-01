@@ -2,4 +2,4 @@ spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
 app:
-  websiteUrl: https://cafe94.com
+  websiteUrl: https://myrestaurant.com
