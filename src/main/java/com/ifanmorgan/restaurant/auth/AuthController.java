@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     private final JwtConfig jwtConfig;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthService authService;
