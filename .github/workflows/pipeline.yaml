@@ -23,7 +23,7 @@ jobs:
         run: ./mvnw clean compile
 
       - name: Build Project
-        run: ./mvnw clean package
+        run: ./mvnw clean package -Dspring.flyway.enabled=false
 
       - name: Login to Amazon ECR
         id: login-ecr
