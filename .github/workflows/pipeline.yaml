@@ -23,7 +23,7 @@ jobs:
         run: ./mvnw clean compile
 
       - name: Run Unit Tests
-        run: ./mvnw clean test
+        run: ./mvnw clean test -Dspring.flyway.enabled=false
 
       - name: Build Project
         run: ./mvnw clean package
