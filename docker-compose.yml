@@ -17,6 +17,7 @@ services:
       retries: 10
   restaurant-api:
     container_name: restaurant-api
+    build: .
     image: restaurant/restaurant:1.0.0
     ports:
       - "8080:8080"

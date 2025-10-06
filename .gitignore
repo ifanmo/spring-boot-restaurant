@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 .env
 spring-boot.log
+logs/
 
 ### STS ###
 .apt_generated

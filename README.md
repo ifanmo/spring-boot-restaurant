@@ -55,52 +55,27 @@ The system is comprised of multiple features that are common to retail and food 
 
 ## 🛠️ Setup
 
-### 1. Clone the Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/ifanmo/spring-boot-restaurant
 cd restaurant-api
 ```
 
-### 2. Configure Environment Variables
-- Rename the ``.env.example`` file to ``.env``.
-- Update the following environment variables inside .env:
-
-#### JWT_SECRET
-
-Generate a secure random key using:
-
-```bash
-openssl rand -base64 32
-```
 ## ▶️ Running the Project
 
-This is a Maven project. To start the application, run:
+To start the application, run:
 
 ```bash
-./mvnw spring-boot:run
+docker-compose up
 ```
-
-If you're on Windows:
-
-```bash
-mvnw.cmd spring-boot:run
-```
-
-Once running, the application will be available at:
-
-```arduino
-http://localhost:8080
-```
-
----
 
 ## 📚 API Documentation
 
 Swagger UI is available at:
 
 ```bash
-http://localhost:8080/api/v1/swagger-ui.html
+http://localhost:8080/swagger-ui.html
 ```
 
 ---
