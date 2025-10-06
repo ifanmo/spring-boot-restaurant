@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> me() {
+        return ResponseEntity.ok(authService.getCurrentUserDto());
+    }
+
     @PostMapping("/login")
     @Operation(summary = "A user can login with email and password credentials")
     public ResponseEntity<JwtResponse> login(
@@ -44,10 +49,6 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> me() {
-        return ResponseEntity.ok(authService.getCurrentUserDto());
-    }
 
 
 }

@@ -25,7 +25,7 @@ public class EventService {
     private final EventRepository eventRepository;
 
     public CreateEventResponse create(CreateEventRequest request) {
-        var customer = getCurrentCustomer();
+        var customer = getAuthenticatedCustomer();
 
         if (eventRepository.existsByDateAndCustomer(request.getDate(), customer)) {
             throw new SameDayEventException();
@@ -79,7 +79,7 @@ public class EventService {
                 .toList();
     }
 
-    private Customer getCurrentCustomer() {
+    private Customer getAuthenticatedCustomer() {
         var user = authService.getCurrentUser();
         var customer = customerRepository.findById(user.getId()).orElse(null);
         if (customer == null) {

@@ -34,7 +34,7 @@ public class AuthService {
         return userMapper.toDto(user);
     }
 
-    public LoginResponse login(@Valid LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
