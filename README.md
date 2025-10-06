@@ -6,11 +6,21 @@ This repository contains an API, created with Spring, for an all-in-one manageme
 
 The system is comprised of multiple features that are common to retail and food outlets.
 
+## Technologies Used
+
+- Spring Boot 3
+- Spring Security 6
+- JWT Token Authentication
+- Spring Data JPA
+- Swagger UI Documentation
+- Docker
+- GitHub Actions
+
 
 ## 📋 Features
 
 - **Authentication Functionality**
-    - Supports both **customers** and **staff** registration and login.
+    - Supports both **customers** and **staff** registration and login with JWTs.
 
 - **Customer Profiles**
     - Name and address
@@ -67,7 +77,7 @@ cd restaurant-api
 To start the application, run:
 
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 ## 📚 API Documentation
