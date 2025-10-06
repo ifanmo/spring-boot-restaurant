@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Staff")
 public class StaffController {
     private final StaffService staffService;
-    private final StaffMapper staffMapper;
 
     @PreAuthorize("hasAnyRole('WAITER', 'CHEF', 'DELIVERY_DRIVER', 'MANAGER')")
     @PostMapping
@@ -23,8 +22,7 @@ public class StaffController {
     public ResponseEntity<StaffDto> createProfile(
             @Valid @RequestBody CreateStaffProfileRequest request
     ) {
-        var staff = staffMapper.toEntity(request);
-        var staffDto = staffService.createStaff(staff);
+        var staffDto = staffService.createStaff(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(staffDto);
 
@@ -45,9 +43,7 @@ public class StaffController {
     @GetMapping("/me")
     @Operation(summary = "A staff member can view their profile")
     public ResponseEntity<StaffDto> me() {
-        var staff = staffService.me();
-
-        var staffDto = staffMapper.toDto(staff);
+        var staffDto = staffService.me();
 
         return ResponseEntity.ok(staffDto);
     }

@@ -1,18 +1,13 @@
 package com.ifanmorgan.restaurant.auth;
 
 import com.ifanmorgan.restaurant.users.UserDto;
-import com.ifanmorgan.restaurant.users.UserMapper;
-import com.ifanmorgan.restaurant.users.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,11 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth")
 @AllArgsConstructor
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtConfig jwtConfig;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -32,51 +22,31 @@ public class AuthController {
     public ResponseEntity<JwtResponse> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword())
-        );
 
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var loginResult = authService.login(request);
 
-        var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        var refreshToken = loginResult.getRefreshToken().toString();
 
         var cookie = new Cookie("refresh_token", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration()); // 7 days
+        cookie.setMaxAge(loginResult.getRefreshToken().getTokenExpiration()); // 7 days
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new JwtResponse(accessToken));
+        return ResponseEntity.ok(new JwtResponse(loginResult.getAccessToken().toString()));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponse> refresh(
             @CookieValue String refreshToken) {
-        if (!jwtService.validateToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        var userId = jwtService.getUserIdFromToken(refreshToken);
-        var user = userRepository.findById(userId).orElseThrow();
-        var accessToken = jwtService.generateAccessToken(user);
-
-        return ResponseEntity.ok(new JwtResponse(accessToken));
+        var accessToken = authService.refreshAccessToken(refreshToken);
+        return ResponseEntity.ok(new JwtResponse(accessToken.toString()));
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> me() {
-        var user = authService.getCurrentUser();
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        var userDto = userMapper.toDto(user);
-
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(authService.getCurrentUserDto());
     }
 
 

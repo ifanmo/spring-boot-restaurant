@@ -32,8 +32,7 @@ public class MenuController {
     public ResponseEntity<MenuItemDto> createOrUpdateSpecial(
             @Valid @RequestBody UpdateSpecialRequest request
     ) {
-        var dto = menuService.createOrUpdateSpecial(request.getName(), request.getPrice(), request.getDescription());
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(menuService.createOrUpdateSpecial(request.getName(), request.getPrice(), request.getDescription()));
     }
 
 }

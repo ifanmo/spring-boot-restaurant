@@ -1,12 +1,8 @@
 package com.ifanmorgan.restaurant.users.staff;
 
 import com.ifanmorgan.restaurant.auth.AuthService;
-import com.ifanmorgan.restaurant.users.Role;
-import com.ifanmorgan.restaurant.users.UserNotFoundException;
-import com.ifanmorgan.restaurant.users.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,13 +12,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class StaffService {
     private final StaffRepository staffRepository;
-    private final UserRepository userRepository;
     private final StaffMapper staffMapper;
     private final ShiftRepository shiftRepository;
     private final AuthService authService;
 
-    public StaffDto createStaff(Staff staff) {
-
+    public StaffDto createStaff(CreateStaffProfileRequest request) {
+        var staff = staffMapper.toEntity(request);
         var user = authService.getCurrentUser();
 
         staff.setUser(user);
@@ -48,15 +43,14 @@ public class StaffService {
         return staffMapper.toDto(staff);
     }
 
-    public Staff me() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var userId = (Long)authentication.getPrincipal();
+    public StaffDto me() {
+        var user = authService.getCurrentUser();
 
-        var staff = staffRepository.findById(userId).orElse(null);
+        var staff = staffRepository.findById(user.getId()).orElse(null);
         if (staff == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found");
         }
 
-        return staff;
+        return staffMapper.toDto(staff);
     }
 }

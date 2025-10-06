@@ -16,16 +16,20 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Tag(name = "Customers")
 public class CustomerController {
-    private final CustomerMapper customerMapper;
     private final CustomerService customerService;
+
+    @GetMapping("/me")
+    @Operation(summary = "A customer can view their profile")
+    public ResponseEntity<CustomerDto> me() {
+        return ResponseEntity.ok(customerService.me());
+    }
 
     @PostMapping
     @Operation(summary = "A user with role 'CUSTOMER' can create a profile")
-    public ResponseEntity<CustomerDto> createProfile(
+    public ResponseEntity<CustomerDto> createCustomerProfile(
             @Valid @RequestBody CreateCustomerProfileRequest request
     ) {
-        var customer = customerMapper.toEntity(request);
-        var customerDto = customerService.createCustomer(customer);
+        var customerDto = customerService.createCustomerProfile(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(customerDto);
 
@@ -41,14 +45,5 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventDto);
     }
 
-    @GetMapping("/me")
-    @Operation(summary = "A customer can view their profile")
-    public ResponseEntity<CustomerDto> me() {
-        var customer = customerService.me();
-
-        var customerDto = customerMapper.toDto(customer);
-
-        return ResponseEntity.ok(customerDto);
-    }
 
 }

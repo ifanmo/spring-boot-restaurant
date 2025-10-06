@@ -1,6 +1,5 @@
 package com.ifanmorgan.restaurant.auth;
 
-import com.ifanmorgan.restaurant.users.Role;
 import com.ifanmorgan.restaurant.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -15,35 +14,27 @@ import java.util.Date;
 public class JwtService {
     private final JwtConfig jwtConfig;
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public String generateRefreshToken(User user) {
+    public Jwt generateRefreshToken(User user) {
         return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
 
 
-    private String generateToken(User user, long tokenExpiration) {
-        return Jwts
-                .builder()
+    private Jwt generateToken(User user, long tokenExpiration) {
+        var claims = Jwts
+                .claims()
                 .subject(user.getId().toString())
-                .claim("email", user.getEmail())
-                .claim("role", user.getRole())
+                .add("email", user.getEmail())
+                .add("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-                .signWith(jwtConfig.getSecretKey())
-                .compact();
-    }
+                .build();
 
-    public boolean validateToken(String token) {
-        try {
-            var claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-        } catch (JwtException e) {
-            throw new RuntimeException(e);
-        }
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 
     private Claims getClaims(String token) {
@@ -54,12 +45,12 @@ public class JwtService {
                 .getPayload();
     }
 
-    public Long getUserIdFromToken(String token) {
-         return Long.valueOf(getClaims(token).getSubject());
-    }
-
-    public Role getRoleFromToken(String token) {
-        Claims claims = getClaims(token);
-        return Role.valueOf(claims.get("role", String.class));
+    public Jwt parseToken(String token) {
+        try {
+            var claims = getClaims(token);
+            return new Jwt(claims, jwtConfig.getSecretKey());
+        } catch (JwtException e) {
+            return null;
+        }
     }
 }

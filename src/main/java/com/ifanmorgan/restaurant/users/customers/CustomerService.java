@@ -18,7 +18,8 @@ public class CustomerService {
     private final EventMapper eventMapper;
 
 
-    public CustomerDto createCustomer(Customer customer) {
+    public CustomerDto createCustomerProfile(CreateCustomerProfileRequest request) {
+        var customer = customerMapper.toEntity(request);
         var user = authService.getCurrentUser();
         if (user == null) {
             throw new UserNotFoundException();
@@ -29,7 +30,7 @@ public class CustomerService {
         return customerMapper.toDto(customer);
     }
 
-    public Customer me() {
+    public CustomerDto me() {
         var user = authService.getCurrentUser();
         if (user == null) {
             throw new UserNotFoundException();
@@ -38,7 +39,7 @@ public class CustomerService {
         if (customer == null) {
             throw new CustomerNotFoundException();
         }
-        return customer;
+        return customerMapper.toDto(customer);
     }
 
     public EventDto addEvent(Long eventId)  {
