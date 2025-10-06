@@ -19,26 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Users")
 public class UserController {
 
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserMapper mapper;
-    private final UserRepository userRepository;
-    private final CustomerService customerService;
+    private final UserService userService;
 
     @PostMapping
     @Operation(summary = "A user can register an account with role 'CUSTOMER', 'MANAGER', 'CHEF', 'WAITER' or 'DELIVERY_DRIVER'")
     public ResponseEntity<UserDto> registerUser(
             @Valid @RequestBody RegisterUserRequest request) {
+        var userDto = userService.registerUser(request);
 
-        if (repository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        var user = mapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(request.getRole());
-        userRepository.save(user);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 }

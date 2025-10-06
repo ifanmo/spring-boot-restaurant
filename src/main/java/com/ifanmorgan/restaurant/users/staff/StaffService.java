@@ -1,5 +1,6 @@
 package com.ifanmorgan.restaurant.users.staff;
 
+import com.ifanmorgan.restaurant.auth.AuthService;
 import com.ifanmorgan.restaurant.users.Role;
 import com.ifanmorgan.restaurant.users.UserNotFoundException;
 import com.ifanmorgan.restaurant.users.UserRepository;
@@ -18,14 +19,11 @@ public class StaffService {
     private final UserRepository userRepository;
     private final StaffMapper staffMapper;
     private final ShiftRepository shiftRepository;
+    private final AuthService authService;
+
     public StaffDto createStaff(Staff staff) {
 
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var userId = (Long)authentication.getPrincipal();
-        var user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        var user = authService.getCurrentUser();
 
         staff.setUser(user);
         staffRepository.save(staff);
@@ -53,6 +51,7 @@ public class StaffService {
     public Staff me() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var userId = (Long)authentication.getPrincipal();
+
         var staff = staffRepository.findById(userId).orElse(null);
         if (staff == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Staff not found");
